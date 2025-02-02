@@ -11,3 +11,6 @@ __pycache__
 
 # uv
 uv.lock
+
+# Build files
+project_4.egg-info*
