@@ -22,6 +22,9 @@ t:
 rls:
 	@$(U) python hexlet-code/manage.py runserver
 
+rgs:
+	cd hexlet-code && python -m gunicorn --reload task_manager.wsgi && cd ..
+
 # \
 Cannot have hexlet-code in path because of hyphen - in package name \
 So hexlet-code is not a valid Python identifier, so Python cannot resolve it as a package \
@@ -41,5 +44,8 @@ ts:
 l:
 	@$(U) ruff check hexlet-code
 
-push:
-	truncate -s 0 hexlet-code/debug.log ; git push
+lg:
+	less hexlet-code/debug.log
+
+cl-lg:
+	truncate -s 0 hexlet-code/debug.log

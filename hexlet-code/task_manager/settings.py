@@ -24,6 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[%(asctime)s.%(msecs)03d] %(levelname)s in %(filename)s/%(funcName)s: %(message)s",
+            "datefmt": "%y-%m-%d %H:%M:%S",
+        },
+    },
     # Handler filters logs after logger and then handles logs
     # Here the handler named 'file' write DEBUG logs to the file
     "handlers": {
@@ -31,6 +37,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": str(BASE_DIR / "debug.log"),
+            "formatter": "verbose",
             "delay": True, # The file is not opened or created before receiving logs
         },
     },
