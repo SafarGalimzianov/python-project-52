@@ -21,6 +21,28 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    # Handler filters logs after logger and then handles logs
+    # Here the handler named 'file' write DEBUG logs to the file
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": str(BASE_DIR / "debug.log"),
+            "delay": True, # The file is not opened or created before receiving logs
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 

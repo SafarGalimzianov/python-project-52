@@ -1,13 +1,17 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/SafarGalimzianov/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/SafarGalimzianov/python-project-52/actions)
 
+### Test Coverage and Mainatinability
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1974c5bee55064ade7ef/test_coverage)](https://codeclimate.com/github/SafarGalimzianov/python-project-52/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1974c5bee55064ade7ef/maintainability)](https://codeclimate.com/github/SafarGalimzianov/python-project-52/maintainability)
+___
 
 ### Problem
 
 Users of Hexlet (students) struggle to keep up with their studying schedules
 For example, according to the inner research,  numerous students forget about their tasks.
 In order to help the students achieve their goals, I decided to create the task-management web-service (service) to create and follow tasks.
-
+___
 
 ### Requirements
 
@@ -31,7 +35,7 @@ In order to help the students achieve their goals, I decided to create the task-
 - The service should load each page in at least 3 seconds
 - The service's interface should be user-friendly
 - The project is based on Python (3.10+), Django (5.0+) PostgreSQL (16+) (remote DB) and SQLite (3.4+) (local DB for development)
-
+___
 
 ### Architecture
 
@@ -54,3 +58,4 @@ The errors related with users actions are forgived and simply shown to the user,
 
 #### Performance and stability
 There are no special methods to boost performance and stability is ensured by the simplicity of the project.
+___

@@ -40,3 +40,6 @@ ts:
 
 l:
 	@$(U) ruff check hexlet-code
+
+push:
+	truncate -s 0 hexlet-code/debug.log ; git push
