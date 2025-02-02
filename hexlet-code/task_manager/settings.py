@@ -33,7 +33,7 @@ DEBUG = os.getenv('DEBUG', False)
 DB_URL = os.getenv('DB_URL')
 
 # why webserver and why is it needed to add localhost if this list is not empty?
-ALLOWED_HOSTS = ['https://python-project-52-h39m.onrender.com','127.0.0.1']
+ALLOWED_HOSTS = ['python-project-52-h39m.onrender.com','127.0.0.1']
 
 
 # Application definition
