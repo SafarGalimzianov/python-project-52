@@ -1,5 +1,29 @@
-{% extends 'layout.html' 3}
-{% block title %}Форма регистрации{% endblock % }
+{% extends 'layout.html' %}
+{% block title %}Форма регистрации{% endblock %}
 {% block main %}
-
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Login/registration form</h4>
+        </div>
+      <div class="card-body">
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+            </div>
+            {% if is_register %}
+                <button type="submit" class="btn btn-primary">Click to register</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">Click to login</button>
+            {% endif %}
+        </form>
+      </div>
+  </div>
+</div>
 {% endblock %}

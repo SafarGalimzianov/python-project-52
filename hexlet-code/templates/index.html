@@ -1,5 +1,141 @@
-{% extends 'layout.html' 3}
-{% block title %}Список {{ data['source' }}{% endblock % }
+{% extends 'layout.html' %}
+{% block title %}List{% endblock %}
 {% block main %}
-
+<div class="container">
+    <div class="card urls-card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="header-icon me-3">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h4 class="mb-0 fw-bold">{% block header %}{% endblock %}</h4>
+                </div>
+                {% comment %}
+                <div class="urls-counter">
+                    <span class="badge bg-primary rounded-pill">
+                        {% block length_ %}{% endblock %}
+                    </span>
+                </div>
+                {% endcomment %}
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" data-test="urls">
+                    <thead>
+                        <tr>
+                        {% for field_name in field_names %}
+                            <th class="px-4 py-3">{{ field }}</th>
+                            {% comment %}
+                            <th class="px-4 py-3 col-id">id</th>
+                            <th class="px-4 py-3">name</th>
+                            <th class="px-4 py-3 col-date">date</th>
+                            <th class="px-4 py-3 col-code">code</th>
+                            <th class="px-4 py-3 col-actions text-end">comment</th>
+                            {% endcomment %}
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="url-row">
+                        {% for items, update, delete in data %}
+                            {% for item in items}
+                                <th class="px-4 py-3">item</th>
+                            {% endfor %}
+                            <td class="px-4 py-3 text-end">
+                                <a href="{{ update['link'] }}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    {{ update['text'] }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-3 text-end">
+                                <a href="{{ delete['link'] }}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    {{ delete['text'] }}
+                                </a>
+                            </td>
+                            {% comment %}
+                            <td class="px-4 py-3">{{ url['id'] }}</td>
+                            <td class="px-4 py-3">{{ url['name'] }}</td>
+                            <td class="px-4 py-3">{{ url['created_at']|default('Нет проверок', true) }}</td>
+                            <td class="px-4 py-3">
+                                {% if url['status_code'] %}
+                                    <span class="badge bg-{{ 'success' if url['status_code'] == 200 else 'warning' }}">
+                                        {{ url['status_code'] }}
+                                    </span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-end">
+                                <a href="{{ url_for('get_url', url_id=url['id']) }}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Подробнее
+                                </a>
+                            </td>
+                            {% endcomment %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% comment %}
+                {% if total_pages > 1 %}
+                <nav aria-label="Page navigation" class="d-flex justify-content-center py-3">
+                    <ul class="pagination mb-0">
+                        {% comment %}Previous page{% endcomment %}
+                        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('get_urls', page=current_page-1) if current_page > 1 else '#' }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        
+                        {% comment %}First page{% end comment %}
+                        {% if current_page > 2 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('get_urls', page=1) }}">1</a>
+                        </li>
+                        {% if current_page > 3 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        {% endif %}
+                        
+                        {% comment %}Current and surrounding pages{% endcomment %}
+                        {% for page in range(max(1, current_page-1), min(total_pages+1, current_page+2)) %}
+                        <li class="page-item {% if page == current_page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('get_urls', page=page) }}">{{ page }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% comment %}Last page{% endcomment %}
+                        {% if current_page < total_pages-1 %}
+                        {% if current_page < total_pages-2 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('get_urls', page=total_pages) }}">{{ total_pages }}</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% comment %}Next page{% endcomment %}
+                        <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('get_urls', page=current_page+1) if current_page < total_pages else '#' }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+                {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

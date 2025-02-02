@@ -19,16 +19,13 @@ from django.urls import include, path
 from task_manager import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.HomePageView.as_view(), name='home'),
     path('admin/', admin.site.urls),
-]
-'''
-    path('tasks/', views.TaskPageView, name='tasks'),
+    path('tasks/', views.TaskPageView.as_view(), name='tasks'),
     path('tasks/create/', views.TaskCreatePageView.as_view(), name='task_create'),
     path('tasks/<int:task_id>/update/', views.TaskUpdatePageView.as_view(), name='task_update'),
     path('tasks/<int:task_id>/delete/', views.TaskDeletePageView.as_view(), name='task_delete'),
-    path('users/', include('task_manager.users'), name='users'),
-    path('statuses/', include('task_manager.statuses'), name='statuses'),
-    path('labels/', include('task_manager.labels'), name='labels'),
+    path('users/', include('task_manager.users.urls'), name='users'),
+    path('statuses/', include('task_manager.statuses.urls'), name='statuses'),
+    path('labels/', include('task_manager.labels.urls'), name='labels'),
 ]
-'''

@@ -17,7 +17,7 @@ render-start:
 	cd hexlet-code && python -m gunicorn task_manager.wsgi && cd ..
 
 t:
-	tree -I 'templates|__pycache__|*.pyc|db.sqlite3|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md' .
+	tree -I 'build|project_4.egg-info|templates|__pycache__|*.pyc|db.sqlite3|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
 
 rls:
 	@$(U) python hexlet-code/manage.py runserver

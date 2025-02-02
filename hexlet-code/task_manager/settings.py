@@ -26,8 +26,8 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "[%(asctime)s.%(msecs)03d] %(levelname)s in %(filename)s/%(funcName)s: %(message)s",
-            "datefmt": "%y-%m-%d %H:%M:%S",
+            "format": "[%(asctime)s.%(msecs)02d] %(levelname)s in %(filename)s/%(funcName)s: %(message)s",
+            "datefmt": "%d-%H:%M:%S",
         },
     },
     # Handler filters logs after logger and then handles logs
