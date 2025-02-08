@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -6,6 +6,7 @@ from task_manager.users.models import User
 from django.contrib.auth.models import User as DjangoUser
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -67,6 +68,14 @@ class UserCreatePageView(CreateView):
         context['form_fields'] = zip(form.fields.keys(), [field.label for field in form.fields.values()])
         return context
     
+    def form_valid(self, form):
+        user = form.save()
+        try:
+            login(self.request, user)
+            return redirect(self.get_success_url())
+        except AttributeError:
+            return self.form_invalid(form)
+
     def form_invalid(self, form):
         flash_messages = {
             'username_exists': 'Please use a different username',
