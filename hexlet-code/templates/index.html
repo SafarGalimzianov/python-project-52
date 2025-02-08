@@ -25,8 +25,8 @@
                 <table class="table table-hover align-middle mb-0" data-test="urls">
                     <thead>
                         <tr>
-                        {% for field_name in field_names %}
-                            <th class="px-4 py-3">{{ field }}</th>
+                        {% for field_name in fields_names %}
+                            <th class="px-4 py-3">{{ field_name }}</th>
                             {% comment %}
                             <th class="px-4 py-3 col-id">id</th>
                             <th class="px-4 py-3">name</th>
@@ -38,25 +38,29 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% block list %}{% endblock %}
+                        {% comment %}
                         <tr class="url-row">
                         {% for items, update, delete in data %}
-                            {% for item in items}
-                                <th class="px-4 py-3">item</th>
+                            {% for item in items %}
+                                <th class="px-4 py-3">{{ item }}</th>
                             {% endfor %}
                             <td class="px-4 py-3 text-end">
                                 <a href="{{ update['link'] }}" 
                                    class="btn btn-primary btn-sm">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    {{ update['text'] }}
+                                    {{ update.text }}
                                 </a>
                             </td>
                             <td class="px-4 py-3 text-end">
                                 <a href="{{ delete['link'] }}" 
                                    class="btn btn-primary btn-sm">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    {{ delete['text'] }}
+                                    {{ delete.text }}
                                 </a>
                             </td>
+                        {% endfor %}
+                        {% endcomment %}
                             {% comment %}
                             <td class="px-4 py-3">{{ url['id'] }}</td>
                             <td class="px-4 py-3">{{ url['name'] }}</td>
@@ -79,21 +83,22 @@
                             </td>
                             {% endcomment %}
                         </tr>
-                        {% endfor %}
                     </tbody>
                 </table>
                 {% comment %}
+                Django template language doesn't support nested comments
+                So Previous page and other comments are not commented out
                 {% if total_pages > 1 %}
                 <nav aria-label="Page navigation" class="d-flex justify-content-center py-3">
                     <ul class="pagination mb-0">
-                        {% comment %}Previous page{% endcomment %}
+                        Previous page
                         <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
                             <a class="page-link" href="{{ url_for('get_urls', page=current_page-1) if current_page > 1 else '#' }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         
-                        {% comment %}First page{% end comment %}
+                        First page
                         {% if current_page > 2 %}
                         <li class="page-item">
                             <a class="page-link" href="{{ url_for('get_urls', page=1) }}">1</a>
@@ -105,14 +110,14 @@
                         {% endif %}
                         {% endif %}
                         
-                        {% comment %}Current and surrounding pages{% endcomment %}
+                        Current and surrounding pages
                         {% for page in range(max(1, current_page-1), min(total_pages+1, current_page+2)) %}
                         <li class="page-item {% if page == current_page %}active{% endif %}">
                             <a class="page-link" href="{{ url_for('get_urls', page=page) }}">{{ page }}</a>
                         </li>
                         {% endfor %}
                         
-                        {% comment %}Last page{% endcomment %}
+                        Last page
                         {% if current_page < total_pages-1 %}
                         {% if current_page < total_pages-2 %}
                         <li class="page-item disabled">
@@ -124,7 +129,7 @@
                         </li>
                         {% endif %}
                         
-                        {% comment %}Next page{% endcomment %}
+                        Next page
                         <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
                             <a class="page-link" href="{{ url_for('get_urls', page=current_page+1) if current_page < total_pages else '#' }}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>

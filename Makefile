@@ -48,5 +48,8 @@ cl-lg:
 m:
 	@$(UM) makemigrations
 
+m-m:
+	@$(UM) migrate
+
 db:
 	@$(UM) dbshell
