@@ -1,0 +1,20 @@
+DB:
+- Collecting workspace informationIn PostgreSQL, the `public` schema is the default namespace for objects such as tables, sequences, functions, etc. If a table is created without explicitly specifying a schema, it is placed in the `public` schema. Dropping and recreating the public schema (as in the query `DROP SCHEMA public CASCADE; CREATE SCHEMA public;`) removes all those objects, effectively cleaning the database for a fresh start.
+
+- why is users_user table is like this ? "Table "public.users_user" Column | Type | Collation | Nullable | Default -------------+---------+-----------+----------+--------- user_ptr_id | integer | | not null | Indexes: "
+
+Workspace
+Collecting workspace information
+
+The users_user table structure looks like this because of Django's model inheritance. In task_manager/users/models.py, the User class inherits from Django's built-in User model using multi-table inheritance.
+
+When using multi-table inheritance in Django:
+
+The child table (users_user) only contains a one-to-one link (user_ptr_id) to the parent table (auth_user)
+All the actual user fields (username, email, password, etc.) are stored in the parent auth_user table
+The user_ptr_id field is both a primary key and a foreign key that links to the parent table
+This is why you only see the user_ptr_id column in the users_user table - it's just storing the relationship to the parent table where all the actual user data lives.
+
+The initial migration file 0001_initial.py shows this relationship being set up with:
+
+- 

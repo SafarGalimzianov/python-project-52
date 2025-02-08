@@ -2,7 +2,8 @@
 {% block list %}
 {% for user in users %}
 <tr class="url-row">
-    <th class="px-4 py-3">{{ user }}</th>
+    <th class="px-4 py-3">{{ user.id }}</th>
+    <th class="px-4 py-3">{{ user.username }}</th>
 </tr>
 {% endfor %}
 {% endblock %}

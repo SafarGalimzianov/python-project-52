@@ -24,11 +24,14 @@ class UserLoginView(LoginView):
         flash_messages = {
             'username_does_not_exist': 'Please enter a valid username',
             'password_invalid': 'Please use a correct password',
+            'something_wrong': 'Something went wrong, please try again',
         }
-        if form.non_field_errors():
+        if form.errors.get('password'):
             messages.error(self.request, flash_messages['password_invalid'], extra_tags='warning')
         if form.errors.get('username'):
             messages.error(self.request, flash_messages['username_does_not_exist'], extra_tags='warning')
+        if form.non_field_errors():
+            messages.error(self.request, flash_messages['something_wrong'], extra_tags='warning')
 
         return super().form_invalid(form)
 
@@ -42,43 +45,39 @@ class UserPageView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['field_names'] = ['ID', 'Username', 'Email']
+        context['fields_names'] = ['ID', 'Username']
         return context
 
 class UserCreatePageView(CreateView):
     model = User
-    fields = ['username', 'email', 'password']
-    labels = ['Username', 'Email', 'Password']
+    form_class = UserCreationForm
     template_name = 'create.html'
     success_url = reverse_lazy('users')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_fields'] = zip(self.fields, self.labels)
+        form = self.get_form()
+        context['form_fields'] = zip(form.fields.keys(), [field.label for field in form.fields.values()])
         return context
     
     def form_invalid(self, form):
         flash_messages = {
-            'email_invalid': 'Please enter a valid email',
-            'email_exists': 'Please enter a different email',
             'username_exists': 'Please use a different username',
+            'password1': 'Please enter your password',
+            'password2': 'Please use stronger passwords that match',
         }
-        if 'email' in form.errors:
-            for error in form.errors['email']:
-                if 'Enter a valid email address' in error:
-                    messages.error(self.request, flash_messages['email_invalid'], extra_tags='warning')
-                elif 'exists' in error:
-                    messages.error(self.request, flash_messages['email_exists'], extra_tags='warning')
-        if 'username' in form.errors:
-            for error in form.errors['username']:
-                if 'already exists' in error:
-                    messages.error(self.request, flash_messages['username_exists'], extra_tags='warning')
-
+        if form.errors.get('username'):
+            messages.error(self.request, flash_messages['username_exists'], extra_tags='warning')
+        if form.errors.get('password1'):
+            messages.error(self.request, flash_messages['password1'], extra_tags='warning')
+        if form.errors.get('password2'):
+            messages.error(self.request, flash_messages['password2'], extra_tags='warning')
+        if form.non_field_errors():
+            messages.error(self.request, form.non_field_errors(), extra_tags='warning')
         return super().form_invalid(form)
 
 class UserUpdatePageView(UpdateView):
     model = User
-    fields = ['username', 'email']
     template_name = 'update.html'
     success_url = reverse_lazy('users')
 
