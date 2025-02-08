@@ -3,6 +3,7 @@ from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from task_manager.users.models import User
+from django.contrib.auth.models import User as DjangoUser
 from django.urls import reverse_lazy
 from django.contrib import messages
 
@@ -34,6 +35,9 @@ class UserLoginView(LoginView):
             messages.error(self.request, flash_messages['something_wrong'], extra_tags='warning')
 
         return super().form_invalid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('home')
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
@@ -42,6 +46,9 @@ class UserPageView(ListView):
     template_name = 'index_users.html'
     model = User
     context_object_name = 'users'
+
+    def get_queryset(self):
+        return DjangoUser.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
