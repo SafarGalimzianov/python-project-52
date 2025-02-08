@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% block title %}Форма регистрации{% endblock %}
+{% block title %}Login{% endblock %}
 {% block main %}
 <div class="container mt-4">
     <div class="card">
@@ -17,11 +17,7 @@
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
             </div>
-            {% if is_register %}
-                <button type="submit" class="btn btn-primary">Click to register</button>
-            {% else %}
-                <button type="submit" class="btn btn-primary">Click to login</button>
-            {% endif %}
+            <button type="submit" class="btn btn-primary">Click to login</button>
         </form>
       </div>
   </div>

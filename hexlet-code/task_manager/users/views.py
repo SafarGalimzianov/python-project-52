@@ -1,7 +1,7 @@
 from django.shortcuts import render, reverse
-from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
-# from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from task_manager.users.models import User
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -10,6 +10,8 @@ from django.contrib import messages
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
+    model = User
+    form_class = AuthenticationForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -17,6 +19,18 @@ class UserLoginView(LoginView):
             'action': reverse('login'),
         })
         return context
+    
+    def form_invalid(self, form):
+        flash_messages = {
+            'username_does_not_exist': 'Please enter a valid username',
+            'password_invalid': 'Please use a correct password',
+        }
+        if form.non_field_errors():
+            messages.error(self.request, flash_messages['password_invalid'], extra_tags='warning')
+        if form.errors.get('username'):
+            messages.error(self.request, flash_messages['username_does_not_exist'], extra_tags='warning')
+
+        return super().form_invalid(form)
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
