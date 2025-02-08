@@ -1,5 +1,6 @@
 U := uv run
-UM := uv run manage.py
+UP := uv run python
+UM := uv run python hexlet-code/manage.py
 
 build:
 	./build.sh
@@ -17,7 +18,7 @@ render-start:
 	cd hexlet-code && python -m gunicorn task_manager.wsgi && cd ..
 
 t:
-	tree -I 'build|project_4.egg-info|templates|__pycache__|*.pyc|db.sqlite3|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
+	tree -I 'build|project_4.egg-info|templates|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
 
 rls:
 	@$(U) python hexlet-code/manage.py runserver
@@ -32,12 +33,6 @@ rps: \
 	python -m gunicorn hexlet-code.task_manager.wsgi \
 #
 
-s:
-	@$(UM) shell_plus --ipython
-
-m: 
-	@$(UM) migrate
-
 ts:
 	@$(U) pytest .
 
@@ -49,3 +44,9 @@ lg:
 
 cl-lg:
 	truncate -s 0 hexlet-code/debug.log
+
+m:
+	@$(UM) makemigrations
+
+db:
+	@$(UM) dbshell

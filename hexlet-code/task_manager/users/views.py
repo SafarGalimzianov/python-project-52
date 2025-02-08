@@ -24,16 +24,11 @@ class UserPageView(ListView):
     model = User
     context_object_name = 'users'
 
-class UserCreatePageView(TemplateView):
-    template_name = 'login.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'action': reverse('users:create'),
-            'is_register': True,
-        })
-        return context
+class UserCreatePageView(CreateView):
+    model = User
+    fields = ['username', 'email']
+    template_name = 'create.html'
+    success_url = reverse_lazy('users')
 
 class UserUpdatePageView(UpdateView):
     model = User
