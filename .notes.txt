@@ -18,3 +18,30 @@ This is why you only see the user_ptr_id column in the users_user table - it's j
 The initial migration file 0001_initial.py shows this relationship being set up with:
 
 - 
+
+Views
+UserPageView
+- You're right, the fact that you can register and log in successfully does indicate that the database and authentication are working correctly.
+
+The problem is likely due to how Django handles fields when you inherit from the built-in User model using multi-table inheritance.
+
+When you inherit from django.contrib.auth.models.User like this:
+
+Django creates a one-to-one relationship between your custom User model (task_manager.users.models.User) and the built-in User model (django.contrib.auth.models.User). This means that the actual user data (username, password, email, etc.) is stored in the auth_user table, while your custom users_user table only contains a link (user_ptr_id) to the auth_user table.
+
+However, Django's ListView (which UserPageView inherits from) might not be automatically fetching the data from the auth_user table when you're using your custom User model.
+
+To fix this, you can override the get_queryset method in your UserPageView to explicitly fetch the data from the auth_user table:
+
+-
+
+UserLoginView
+- The issue you're encountering with the login view is due to Django's default behavior of redirecting to profile after a successful login, which doesn't exist in your URL patterns.
+
+To fix this, you can override the get_success_url method in your UserLoginView to redirect to a URL that exists in your urls.py, such as the home page or the users page.
+
+Here's how you can modify your UserLoginView in task_manager/users/views.py:
+def get_success_url(self):
+        return reverse_lazy('home')  # Redirect to the 'home' page after login
+
+-
