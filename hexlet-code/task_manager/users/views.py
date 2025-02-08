@@ -68,11 +68,13 @@ class UserCreatePageView(CreateView):
         context['form_fields'] = zip(form.fields.keys(), [field.label for field in form.fields.values()])
         return context
     
+    # Automatic login after successful registration
     def form_valid(self, form):
         user = form.save()
         try:
             login(self.request, user)
             return redirect(self.get_success_url())
+        # AttributeError is raised when the form is invalid
         except AttributeError:
             return self.form_invalid(form)
 
