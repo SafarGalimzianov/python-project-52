@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block title %}Labels{% endblock %}
+{% block main %}
+<div class="container">
+    <h1 class="mt-5 mb-4">Labels</h1>
+    <form method="post" action="{% url 'label_create' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="label" class="form-label">Label</label>
+          <input type="text" class="form-control" id="label" name="label" placeholder="Enter label">
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Create Label</button>
+    </form>
+    <div class="card urls-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" data-test="urls">
+                    <thead>
+                        <tr>
+                        {% for field_name in fields_name %}
+                            <th class="px-4 py-3">{{ field_name }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% block list %}
+                        {% for label in labels %}
+                            <tr>
+                                <td>{{ label.label }}</td>
+                                <td>
+                                    <a href="{% url 'label_update' pk=label.id %}">Edit</a>
+                                    <a href="{% url 'label_delete' pk=label.id %}">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
