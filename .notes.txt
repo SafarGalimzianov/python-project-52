@@ -20,6 +20,10 @@ The initial migration file 0001_initial.py shows this relationship being set up 
 - 
 
 Views
+General methods
+- The dispatch method is defined on Django’s base view classes (like django.views.generic.base.View.dispatch). It receives an HTTP request and then routes it to the appropriate handler method (like get(), post(), etc.) based on the HTTP method of the request.
+This method is useful when you want to add functionality (such as permissions checks) that applies to all request methods before delegating to the specific method handlers.
+
 UserPageView
 - You're right, the fact that you can register and log in successfully does indicate that the database and authentication are working correctly.
 
@@ -44,4 +48,3 @@ Here's how you can modify your UserLoginView in task_manager/users/views.py:
 def get_success_url(self):
         return reverse_lazy('home')  # Redirect to the 'home' page after login
 
--

@@ -11,11 +11,10 @@
         <div class="card-body">
         <form method="post" action="">
             {% csrf_token %}
-            {% for field, label in fields %}
+            {% for field, label in form_fields %}
             <div class="mb-3">
               <label for="{{ field }}" class="form-label">{{ label }}</label>
-                <input type="text" class="form-control" id="{{ field }}"
-                    name="{{ field }}" value="{{ data[field]|default:'' }}" placeholder="Enter {{ label }}">
+              {{ form[field] }}
             </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Click to update</button>
