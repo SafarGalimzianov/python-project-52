@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from task_manager.users.models import User
 from django.contrib.auth.models import User as DjangoUser
+from task_manager.users.forms import UserUpdateForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth import login
@@ -51,9 +52,13 @@ class UserPageView(ListView):
     def get_queryset(self):
         return DjangoUser.objects.all()
 
+    # I should use models fields instead of hardcoding them
+    # Pass them to template and make template refer to them in variables
+    # Like user.field1 etc
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['fields_names'] = ['ID', 'Username']
+        context['fields_names'] = ['ID', 'username']
+        # context['fields_names'] = [field.verbose_name for field in self.model._meta.fields]
         return context
 
 class UserCreatePageView(CreateView):
@@ -98,7 +103,7 @@ class UserUpdatePageView(UpdateView):
     model = DjangoUser
     template_name = 'update.html'
     success_url = reverse_lazy('users')
-    form_class = UserChangeForm
+    form_class = UserUpdateForm
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -113,7 +118,18 @@ class UserUpdatePageView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form_fields'] = zip(self.get_form().fields.keys(), [field.label for field in self.get_form().fields.values()])
+        context['field_name'] = 'username'
         return context
+    
+    def form_invalid(self, form):
+        flash_messages = {
+            'username_exists': 'Please use a different username',
+        }
+        if form.errors.get('username'):
+            messages.error(self.request, flash_messages['username_exists'], extra_tags='warning')
+        if form.non_field_errors():
+            messages.error(self.request, form.non_field_errors(), extra_tags='warning')
+        return super().form_invalid(form)
 
 class UserDeletePageView(DeleteView):
     model = DjangoUser

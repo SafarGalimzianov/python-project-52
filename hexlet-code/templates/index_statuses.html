@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block title %}List{% endblock %}
+{% block main %}
+<div class="container">
+    <h1 class="mt-5 mb-4">Statuses</h1>
+    <form method="post" action="{% url 'status_create' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <input type="text" class="form-control" id="status" name="status" placeholder="Enter status">
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Create Status</button>
+    </form>
+    <div class="card urls-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" data-test="urls">
+                    <thead>
+                        <tr>
+                        {% for field_name in fields_names %}
+                            <th class="px-4 py-3">{{ field_name }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% block list %}
+                        {% for status in statuses %}
+                            <tr>
+                                <td>{{ status.status }}</td>
+                                <td>
+                                    <a href="{% url 'status_update' status.id %}">Edit</a>
+                                    <a href="{% url 'status_delete' status.id %}">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

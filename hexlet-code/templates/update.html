@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load custom_tags %}
 {% block title %}Update{% endblock %}
 {% block main %}
 <div class="container mt-4">
@@ -13,9 +14,10 @@
             {% csrf_token %}
             {% for field, label in form_fields %}
             <div class="mb-3">
-              <label for="{{ field }}" class="form-label">{{ label }}</label>
-              {{ form[field] }}
-            </div>
+                <label for="{{ field }}" class="form-label">{{ label }}</label>
+                <input type="text" class="form-control" id="{{ field }}"
+                      name="{{ field }}" value="{{ form.instance|getattribute:field_name }}" placeholder="Enter {{ label }}">
+              </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Click to update</button>
         </form>
