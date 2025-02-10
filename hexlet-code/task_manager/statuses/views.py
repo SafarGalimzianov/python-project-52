@@ -13,6 +13,7 @@ class StatusPageView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['fields_name'] = ['ID', 'Status']
+        context['form'] = StatusForm()
         return context
 
 class StatusCreatePageView(CreateView):
@@ -21,13 +22,15 @@ class StatusCreatePageView(CreateView):
     template_name = 'create.html'
     success_url = reverse_lazy('statuses')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_fields'] = zip(self.get_form().fields.keys(), [field.label for field in self.get_form().fields.values()])
+        context['form'] = StatusForm()
+        return context
 
     def form_valid(self, form):
-        try:
-            return super().form_valid(form)
-        except Exception as e:
-            messages.error(self.request, f"Error creating status: {e}")
-            return self.form_invalid(form)
+        messages.success(self.request, 'Status created successfully')
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():

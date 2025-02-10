@@ -7,8 +7,14 @@
         {% csrf_token %}
         <div class="mb-3">
           <label for="status" class="form-label">Status</label>
-          <input type="text" class="form-control" id="status" name="status" placeholder="Enter status">
+          <input type="text" class="form-control" id="status" name="status"
+                 placeholder="Enter status" value="{{ form.status.value|default:'' }}">
         </div>
+        {% if form.status.errors %}
+        <div class="text-danger mb-3">
+            {{ form.status.errors.0 }}
+        </div>
+        {% endif %}
         <button type="submit" class="btn btn-primary mb-3">Create Status</button>
     </form>
     <div class="card urls-card">

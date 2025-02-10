@@ -11,9 +11,14 @@
               <label for="{{ field }}" class="form-label">{{ label }}</label>
                 <input type="text" class="form-control" id="{{ field }}"
                     name="{{ field }}" placeholder="Enter {{ label }}">
+                {% if form.errors.status %}
+                <div class="invalid-feedback">
+                    {{ form.errors.status.0 }}
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Click to  create</button>
+            <button type="submit" class="btn btn-primary">Click to create</button>
         </form>
         </div>
     </div>
