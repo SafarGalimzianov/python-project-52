@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as DjangoUser
 
-class User(User):
-    pass
+class User(DjangoUser):
+    class Meta:
+        proxy = True

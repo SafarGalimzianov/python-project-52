@@ -60,6 +60,8 @@ class UserPageView(ListView):
         context['fields_names'] = ['ID', 'username']
         # context['fields_names'] = [field.verbose_name for field in self.model._meta.fields]
         return context
+    
+
 
 class UserCreatePageView(CreateView):
     model = User
@@ -70,34 +72,13 @@ class UserCreatePageView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = self.get_form()
-        context['form_fields'] = zip(self.get_form().fields.keys(), [field.label for field in self.get_form().fields.values()])
+        # Change this to use form fields directly
+        context['form_fields'] = [
+            (name, field) for name, field in form.fields.items()
+        ]
+        context['form'] = form
         return context
     
-    # Automatic login after successful registration
-    def form_valid(self, form):
-        user = form.save()
-        try:
-            login(self.request, user)
-            return redirect(self.get_success_url())
-        # AttributeError is raised when the form is invalid
-        except AttributeError:
-            return self.form_invalid(form)
-
-    def form_invalid(self, form):
-        flash_messages = {
-            'username_exists': 'Please use a different username',
-            'password1': 'Please enter your password',
-            'password2': 'Please use stronger passwords that match',
-        }
-        if form.errors.get('username'):
-            messages.error(self.request, flash_messages['username_exists'], extra_tags='warning')
-        if form.errors.get('password1'):
-            messages.error(self.request, flash_messages['password1'], extra_tags='warning')
-        if form.errors.get('password2'):
-            messages.error(self.request, flash_messages['password2'], extra_tags='warning')
-        if form.non_field_errors():
-            messages.error(self.request, form.non_field_errors(), extra_tags='warning')
-        return super().form_invalid(form)
 
 class UserUpdatePageView(UpdateView):
     model = DjangoUser
