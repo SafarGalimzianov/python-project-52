@@ -7,14 +7,14 @@ class Task(models.Model):
     status = models.ForeignKey(Status, on_delete=models.PROTECT, related_name='tasks')
     labels = models.ManyToManyField(Label, related_name='tasks')
     creator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  # Updated reference
+        'auth.User',  # Updated reference
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='created_tasks'
     )
     responsible = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  # Updated reference
+        'auth.User',  # Updated reference
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
