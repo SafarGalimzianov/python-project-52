@@ -4,7 +4,8 @@
 {% block main %}
 <div class="container">
     <h1 class="mt-5 mb-4">{{ header }}</h1>
-    <form method="post" action="{% url 'label_create' %}">
+    <form method="post"
+    action="{% url form_action %}">
         {% csrf_token %}
         {% for field in form %}
             <div class="mb-3">

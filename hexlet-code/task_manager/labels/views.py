@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
+from django.db.models import ProtectedError
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
 
@@ -21,8 +22,9 @@ class LabelPageView(LabelFormMixin, ListView):
     template_name = 'index_labels.html'
     context_object_name = 'table_content'
     context_extra = {
-            'title': 'Labels',
-            'table_headers': ['ID', 'Label', 'Actions'],
+        'title': 'Labels',
+        'table_headers': ['ID', 'Label', 'Actions'],
+        'form_action': 'label_create',
         }
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
@@ -56,3 +58,11 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
 class LabelDeletePageView(DeleteView):
     model = Label
     success_url = reverse_lazy('labels')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.tasks.exists():
+            messages.error(self.request, "Cannot delete label because it is assigned to a task.")
+            return redirect('labels')
+        messages.success(self.request, f'{self.object.label} deleted successfully')
+        return super().delete(request, *args, **kwargs)

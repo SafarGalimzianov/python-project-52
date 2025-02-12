@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
+from django.db.models import ProtectedError
 from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
 
@@ -23,10 +24,12 @@ class StatusPageView(StatusFormMixin, ListView):
     context_extra = {
         'title': 'Statuses',
         'table_headers': ['ID', 'Status', 'Actions'],
+        'form_action': 'status_create',
     }
-    
+    """
     def get_queryset(self):
         return Status.objects.all()
+    """
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
     template_name = 'create.html'
@@ -60,3 +63,11 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
 class StatusDeletePageView(DeleteView):
     model = Status
     success_url = reverse_lazy('statuses')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.tasks.exists():
+            messages.error(self.request, "Cannot delete status because it is assigned to a task.")
+            return redirect('statuses')
+        messages.success(self.request, f'{self.object.status} deleted successfully')
+        return super().delete(request, *args, **kwargs)
