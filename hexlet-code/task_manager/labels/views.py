@@ -18,14 +18,11 @@ class LabelPageView(ListView):
 
 class LabelCreatePageView(CreateView):
     model = Label
-    fields = ['label']
-    template_name = 'create.html'
+    form_class = LabelForm
     success_url = reverse_lazy('labels')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_fields'] = zip(self.get_form().fields.keys(), 
-                                   [field.label for field in self.get_form().fields.values()])
         context['form'] = LabelForm()
         return context
 
@@ -40,23 +37,21 @@ class LabelCreatePageView(CreateView):
         return super().form_invalid(form)
 
 class LabelUpdatePageView(UpdateView):
-    model = Label
     template_name = 'update.html'
-    success_url = reverse_lazy('labels')
+    model = Label
     form_class = LabelForm
+    success_url = reverse_lazy('labels')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = self.get_form()
         context['form_fields'] = zip(form.fields.keys(), 
                                    [field.label for field in form.fields.values()])
-        context['field_name'] = 'label'
         return context
 
 class LabelDeletePageView(DeleteView):
     model = Label
-    template_name = 'delete.html'
     success_url = reverse_lazy('labels')
-
-    def get(self, request, *args, **kwargs):
+    '''    def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
+    '''

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Users</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" media="screen">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <h1>Search Users</h1>
+    <header>
+        <a href="{% url 'advanced_search' %}">Go to Advanced mode</a>
+    </header>
+    <form method="get" action="{% url 'search_users' %}">
+        <fieldset>
+            <legend>User</legend>
+            <ul>
+                <li>
+                    <label for="q_first_name_or_last_name_cont">First name or Last name contains</label>
+                    <input type="text" name="q[first_name_or_last_name_cont]" id="q_first_name_or_last_name_cont">
+                </li>
+                <li>
+                    <label for="q_email_cont">Email contains</label>
+                    <input type="text" name="q[email_cont]" id="q_email_cont">
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>User's Posts</legend>
+            <ul>
+                <li>
+                    <label for="q_posts_title_cont">Post Title contains</label>
+                    <input type="text" name="q[posts_title_cont]" id="q_posts_title_cont">
+                </li>
+                <li>
+                    <label for="q_other_posts_title_cont">Another Post Title contains</label>
+                    <input type="text" name="q[other_posts_title_cont]" id="q_other_posts_title_cont">
+                </li>
+            </ul>
+        </fieldset>
+        <section>
+            <input type="checkbox" name="distinct" id="distinct" value="1">
+            <label for="distinct">Return distinct records</label>
+        </section>
+        <input type="submit" value="Search" class="btn">
+    </form>
+
+    <p>SQL:</p>
+    <code>SELECT * FROM users</code>
+
+    <h2>Your first 10 results out of {{ total_results }} total</h2>
+    <table>
+        <thead>
+            <tr>
+                <th><a href="?q[s]=id">Id</a></th>
+                <th><a href="?q[s]=first_name">First name</a></th>
+                <th><a href="?q[s]=last_name">Last name</a></th>
+                <th><a href="?q[s]=email">Email</a></th>
+                <th><a href="?q[s]=created_at">Created at</a></th>
+                <th><a href="?q[s]=updated_at">Updated at</a></th>
+                <th>Post 1 title</th>
+                <th>Post 2 title</th>
+                <th>Post 3 title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.created_at }}</td>
+                <td>{{ user.updated_at }}</td>
+                <td>{{ user.posts.0.title }}</td>
+                <td>{{ user.posts.1.title }}</td>
+                <td>{{ user.posts.2.title }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <footer>
+        <strong>Ransack demo app</strong> running on Django, PostgreSQL - 
+        <a href="https://github.com/yourrepo">Source code on GitHub</a>
+    </footer>
+</body>
+</html>

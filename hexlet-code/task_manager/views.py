@@ -5,10 +5,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from task_manager.models import Task
+from task_manager.users.models import User
 from task_manager.forms import TaskForm
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
+
+class SearchPageView:
+    template_name = 'search.html'
+
 
 class TaskPageView(LoginRequiredMixin, ListView):
     template_name = 'index_tasks.html'
@@ -42,9 +47,9 @@ class TaskPageView(LoginRequiredMixin, ListView):
     
 
 class TaskCreatePageView(LoginRequiredMixin, CreateView):
+    template_name = 'create.html'
     model = Task
     fields = ['status', 'labels', 'responsible', 'description']
-    template_name = 'create.html'
     success_url = reverse_lazy('tasks')
 
     def get_form(self, form_class=None):
@@ -80,9 +85,9 @@ class TaskCreatePageView(LoginRequiredMixin, CreateView):
 
 
 class TaskUpdatePageView(LoginRequiredMixin, UpdateView):
+    template_name = 'update.html'
     model = Task
     fields = ['status', 'labels', 'responsible', 'description']
-    template_name = 'update.html'
     success_url = reverse_lazy('tasks')
 
     def get_form(self, form_class=None):
@@ -118,8 +123,8 @@ class TaskUpdatePageView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
-    model = Task
     template_name = 'delete.html'
+    model = Task
     success_url = reverse_lazy('tasks')
 
     def dispatch(self, request, *args, **kwargs):

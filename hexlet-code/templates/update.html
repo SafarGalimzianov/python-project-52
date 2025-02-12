@@ -4,11 +4,6 @@
 {% block main %}
 <div class="container mt-4">
     <div class="card">
-        {% comment %}
-        <div class="card-header">
-            <h4>Update {{ header }}</h4>
-        </div>
-        {% endcomment %}
         <div class="card-body">
         <form method="post" action="">
             {% csrf_token %}
@@ -16,7 +11,7 @@
             <div class="mb-3">
                 <label for="{{ field }}" class="form-label">{{ label }}</label>
                 <input type="text" class="form-control" id="{{ field }}"
-                      name="{{ field }}" value="{{ form.instance|getattribute:field_name }}" placeholder="Enter {{ label }}">
+                      name="{{ field }}" value="{{ form.instance|getattribute:field }}" placeholder="Enter {{ label }}">
               </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Click to update</button>

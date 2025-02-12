@@ -35,7 +35,10 @@
                                 <td>{{ label.label }}</td>
                                 <td>
                                     <a href="{% url 'label_update' label.id %}">Edit</a>
-                                    <a href="{% url 'label_delete' label.id %}">Delete</a>
+                                    <form method="post" action="{% url 'label_delete' label.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this label?');">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}
