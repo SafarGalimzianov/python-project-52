@@ -1,20 +1,22 @@
 {% extends 'index.html' %}
-{% block title %}List{% endblock %}
+{% load custom_tags %}
+{% block title %}{{ title }}{% endblock %}
 {% block main %}
 <div class="container">
-    <h1 class="mt-5 mb-4">Labels</h1>
+    <h1 class="mt-5 mb-4">{{ header }}</h1>
     <form method="post" action="{% url 'label_create' %}">
         {% csrf_token %}
-        <div class="mb-3">
-          <label for="label" class="form-label">Label</label>
-          <input type="text" class="form-control" id="label" name="label"
-                 placeholder="Enter label" value="{{ form.label.value|default:'' }}">
-        </div>
-        {% if form.label.errors %}
-        <div class="text-danger mb-3">
-            {{ form.label.errors.0 }}
-        </div>
-        {% endif %}
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label"><h4>{{ field.label }}</h4></label>
+                {{ field|add_class:'form-control' }}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
         <button type="submit" class="btn btn-primary mb-3">Create Label</button>
     </form>
     <div class="card urls-card">
@@ -23,26 +25,25 @@
                 <table class="table table-hover align-middle mb-0" data-test="urls">
                     <thead>
                         <tr>
-                        {% for field_name in fields_names %}
-                            <th class="px-4 py-3">{{ field_name }}</th>
-                        {% endfor %}
+                            {% for header in table_headers %}
+                                <th>{{ header }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
-                        {% block list %}
-                        {% for label in labels %}
+                        {% for content in table_content %}
                             <tr>
-                                <td>{{ label.label }}</td>
+                                <td>{{ content.id }}</td>
+                                <td>{{ content.label }}</td>
                                 <td>
-                                    <a href="{% url 'label_update' label.id %}">Edit</a>
-                                    <form method="post" action="{% url 'label_delete' label.id %}" style="display:inline;">
+                                    <a href="{% url 'label_update' content.id %}">Edit</a>
+                                    <form method="post" action="{% url 'label_delete' content.id %}" style="display:inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this label?');">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                         {% endfor %}
-                        {% endblock %}
                     </tbody>
                 </table>
             </div>

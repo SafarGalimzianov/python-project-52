@@ -7,6 +7,18 @@
         <div class="card-body">
         <form method="post" action="">
             {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field|add_class:'form-control' }}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% comment %}
             {% for field, label in form_fields %}
             <div class="mb-3">
                 <label for="{{ field }}" class="form-label">{{ label }}</label>
@@ -14,6 +26,7 @@
                       name="{{ field }}" value="{{ form.instance|getattribute:field }}" placeholder="Enter {{ label }}">
               </div>
             {% endfor %}
+            {% endcomment %}
             <button type="submit" class="btn btn-primary">Click to update</button>
         </form>
         </div>

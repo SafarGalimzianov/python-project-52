@@ -1,19 +1,21 @@
-from django.shortcuts import render
+from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormMixin
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
-from django.contrib import messages
 
-class LabelPageView(ListView):
+class LabelPageView(FormMixin, ListView):
     template_name = 'index_labels.html'  
     model = Label
-    context_object_name = 'labels'
+    form_class = LabelForm
+    context_object_name = 'table_content'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['fields_name'] = ['ID', 'Label']
-        context['form'] = LabelForm()
+        context['title'] = 'Labels'
+        context['form'] = self.get_form()
+        context['table_headers'] = ['ID', 'Label', 'Actions']
         return context
 
 class LabelCreatePageView(CreateView):
@@ -23,11 +25,11 @@ class LabelCreatePageView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = LabelForm()
+        context['form'] = self.get_form()
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, 'Label created successfully')
+        messages.success(self.request, f'{form.instance.label} created successfully')
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -44,14 +46,9 @@ class LabelUpdatePageView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form = self.get_form()
-        context['form_fields'] = zip(form.fields.keys(), 
-                                   [field.label for field in form.fields.values()])
+        context['form'] = self.get_form()
         return context
 
 class LabelDeletePageView(DeleteView):
     model = Label
     success_url = reverse_lazy('labels')
-    '''    def get(self, request, *args, **kwargs):
-        return self.delete(request, *args, **kwargs)
-    '''

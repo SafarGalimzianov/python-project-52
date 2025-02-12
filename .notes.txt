@@ -48,3 +48,7 @@ Here's how you can modify your UserLoginView in task_manager/users/views.py:
 def get_success_url(self):
         return reverse_lazy('home')  # Redirect to the 'home' page after login
 
+
+Forms
+- In the template, {{ field.label }} renders the human-readable label for a form field. In your setup, it's the label associated with the label field (defined in your LabelForm) used in the form.
+This label is automatically generated from the field definition in the model or can be explicitly set in the form.
