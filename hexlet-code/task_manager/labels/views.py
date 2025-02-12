@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
@@ -43,11 +44,14 @@ class LabelCreatePageView(CreateView):
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error in {field}: {error}")
-        return super().form_invalid(form)
+        return redirect('labels')
 
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('labels')
+    def form_valid(self, form):
+        messages.success(self.request, f'{form.instance.label} updated successfully')
+        return super().form_valid(form)
 
 class LabelDeletePageView(DeleteView):
     model = Label

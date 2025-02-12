@@ -41,7 +41,7 @@
                 {% endif %}
                 {% comment %}
                 This by default makes GET request
-                Butt Django LogoutView requires POST
+                But Django LogoutView requires POST
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
@@ -83,7 +83,10 @@
     <main class="container flex-grow-1 mt-2">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">
+                <div class="alert alert-{{ message.tags|default:'info' }}" role="alert"
+                    {% if message.tags == 'error' %}
+                        style="background-color: orange;"
+                    {% endif %}>
                     {{ message }}
                 </div>
             {% endfor %}
