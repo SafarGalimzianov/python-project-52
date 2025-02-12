@@ -25,16 +25,9 @@ class LabelPageView(LabelFormMixin, ListView):
             'table_headers': ['ID', 'Label', 'Actions'],
         }
 
-class LabelCreatePageView(CreateView):
+class LabelCreatePageView(LabelFormMixin, CreateView):
     template_name = 'create.html'
-    model = Label
-    form_class = LabelForm
     success_url = reverse_lazy('labels')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        return context
 
     def form_valid(self, form):
         messages.success(self.request, f'{form.instance.label} created successfully')
@@ -49,8 +42,15 @@ class LabelCreatePageView(CreateView):
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('labels')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        self.original_label = obj.label
+        return obj
+
     def form_valid(self, form):
-        messages.success(self.request, f'{form.instance.label} updated successfully')
+        response = super().form_valid(form)
+        messages.success(self.request, f'{self.original_label} updated to {form.instance.label} successfully')
         return super().form_valid(form)
 
 class LabelDeletePageView(DeleteView):
