@@ -1,53 +1,26 @@
 {% extends 'index.html' %}
-{% load custom_tags %}
 {% block title %}{{ title }}{% endblock %}
-{% block main %}
-<div class="container">
-    <h1 class="mt-5 mb-4">{{ header }}</h1>
-    <form method="post" action="{% url 'label_create' %}">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label"><h4>{{ field.label }}</h4></label>
-                {{ field|add_class:'form-control' }}
-                {% if field.errors %}
-                <div class="invalid-feedback d-block">
-                    {{ field.errors.0 }}
-                </div>
-                {% endif %}
-            </div>
+{% block contents %}
+<thead>
+    <tr>
+        {% for header in table_headers %}
+            <th>{{ header }}</th>
         {% endfor %}
-        <button type="submit" class="btn btn-primary mb-3">Create Label</button>
-    </form>
-    <div class="card urls-card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" data-test="urls">
-                    <thead>
-                        <tr>
-                            {% for header in table_headers %}
-                                <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for content in table_content %}
-                            <tr>
-                                <td>{{ content.id }}</td>
-                                <td>{{ content.label }}</td>
-                                <td>
-                                    <a href="{% url 'label_update' content.id %}">Edit</a>
-                                    <form method="post" action="{% url 'label_delete' content.id %}" style="display:inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this label?');">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+    </tr>
+</thead>
+<tbody>
+    {% for content in table_content %}
+        <tr>
+            <td>{{ content.id }}</td>
+            <td>{{ content.label }}</td>
+            <td>
+                <a href="{% url 'label_update' content.id %}">Edit</a>
+                <form method="post" action="{% url 'label_delete' content.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this label?');">Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
 {% endblock %}

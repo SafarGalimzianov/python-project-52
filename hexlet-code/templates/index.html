@@ -1,82 +1,30 @@
 {% extends 'layout.html' %}
+{% load custom_tags %}
 {% block title %}List{% endblock %}
 {% block main %}
 <div class="container">
+    <h1 class="mt-5 mb-4">{{ header }}</h1>
+    <form method="post" action="{% url 'label_create' %}">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label"><h4>{{ field.label }}</h4></label>
+                {{ field|add_class:'form-control' }}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary mb-3">Create</button>
+    </form>
     <div class="card urls-card">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" data-test="urls">
-                    <thead>
-                        <tr>
-                        {% for field_name in fields_names %}
-                            <th class="px-4 py-3">{{ field_name }}</th>
-                        {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% block list %}{% endblock %}
-                    </tbody>
+                    {% block contents %}{% endblock %}
                 </table>
-
-
-
-
-
-
-                {% comment %}
-                Django template language doesn't support nested comments
-                So Previous page and other comments are not commented out
-                {% if total_pages > 1 %}
-                <nav aria-label="Page navigation" class="d-flex justify-content-center py-3">
-                    <ul class="pagination mb-0">
-                        Previous page
-                        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('get_urls', page=current_page-1) if current_page > 1 else '#' }}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        
-                        First page
-                        {% if current_page > 2 %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('get_urls', page=1) }}">1</a>
-                        </li>
-                        {% if current_page > 3 %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                        {% endif %}
-                        {% endif %}
-                        
-                        Current and surrounding pages
-                        {% for page in range(max(1, current_page-1), min(total_pages+1, current_page+2)) %}
-                        <li class="page-item {% if page == current_page %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('get_urls', page=page) }}">{{ page }}</a>
-                        </li>
-                        {% endfor %}
-                        
-                        Last page
-                        {% if current_page < total_pages-1 %}
-                        {% if current_page < total_pages-2 %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                        {% endif %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('get_urls', page=total_pages) }}">{{ total_pages }}</a>
-                        </li>
-                        {% endif %}
-                        
-                        Next page
-                        <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('get_urls', page=current_page+1) if current_page < total_pages else '#' }}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                {% endif %}
-                {% endcomment %}
             </div>
         </div>
     </div>

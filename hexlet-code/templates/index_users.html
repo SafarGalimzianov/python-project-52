@@ -1,17 +1,34 @@
-{% extends 'index.html' %}
-{% block list %}
-{% for user in users %}
-<tr class="url-row">
-    <th class="px-4 py-3">{{ user.id }}</th>
-    <th class="px-4 py-3">{{ user.username }}</th>
-    {% if request.user.is_staff %}
-    <th class="px-4 py-3">
-        <a href="{% url 'users_update' pk=user.id %}">Update</a>
-    </th>
-    <th class="px-4 py-3">
-        <a href="{% url 'users_delete' pk=user.id %}">Delete</a>
-    </th>
-    {% endif %}
-</tr>
-{% endfor %}
+{% extends 'layout.html' %}
+{% block main %}
+    <div class="card urls-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" data-test="urls">
+                    <thead>
+                        <tr>
+                        {% for field_name in fields_names %}
+                            <th class="px-4 py-3">{{ field_name }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                    <tr class="url-row">
+                        <th class="px-4 py-3">{{ user.id }}</th>
+                        <th class="px-4 py-3">{{ user.username }}</th>
+                        {% if request.user.is_staff %}
+                        <th class="px-4 py-3">
+                            <a href="{% url 'users_update' pk=user.id %}">Update</a>
+                        </th>
+                        <th class="px-4 py-3">
+                            <a href="{% url 'users_delete' pk=user.id %}">Delete</a>
+                        </th>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
