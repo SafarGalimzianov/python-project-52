@@ -3,9 +3,9 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
-from django.db.models import ProtectedError
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
+
 
 class LabelFormMixin(FormMixin):
     model = Label
@@ -18,6 +18,7 @@ class LabelFormMixin(FormMixin):
         context.update(self.context_extra)
         return context
 
+
 class LabelPageView(LabelFormMixin, ListView):
     template_name = 'index_labels.html'
     context_object_name = 'table_content'
@@ -27,8 +28,9 @@ class LabelPageView(LabelFormMixin, ListView):
         'form_action': 'label_create',
         }
 
+
 class LabelCreatePageView(LabelFormMixin, CreateView):
-    template_name = 'create.html'
+    template_name = 'create.html' # Never rendered.Only because required by CreateView
     success_url = reverse_lazy('labels')
 
     def form_valid(self, form):
@@ -41,6 +43,7 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
                 messages.error(self.request, f"Error in {field}: {error}")
         return redirect('labels')
 
+
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('labels')
@@ -52,8 +55,12 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, f'{self.original_label} updated to {form.instance.label} successfully')
+        messages.success(
+            self.request,
+            f'{self.original_label} updated to {form.instance.label} successfully'
+        )
         return super().form_valid(form)
+
 
 class LabelDeletePageView(DeleteView):
     model = Label

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
@@ -6,10 +7,8 @@ from task_manager.users.models import User
 from django.contrib.auth.models import User as DjangoUser
 from task_manager.users.forms import UserUpdateForm
 from django.urls import reverse_lazy
-from django.contrib import messages
 from django.contrib.auth import login
 
-# Create your views here.
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
@@ -41,8 +40,10 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         return reverse_lazy('home')
 
+
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
+
 
 class UserPageView(ListView):
     template_name = 'index_users.html'
@@ -52,15 +53,11 @@ class UserPageView(ListView):
     def get_queryset(self):
         return DjangoUser.objects.all()
 
-    # I should use models fields instead of hardcoding them
-    # Pass them to template and make template refer to them in variables
-    # Like user.field1 etc
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['fields_names'] = ['ID', 'username']
         # context['fields_names'] = [field.verbose_name for field in self.model._meta.fields]
         return context
-    
 
 
 class UserCreatePageView(CreateView):
@@ -78,7 +75,7 @@ class UserCreatePageView(CreateView):
         ]
         context['form'] = form
         return context
-    
+
 
 class UserUpdatePageView(UpdateView):
     model = DjangoUser
@@ -111,6 +108,7 @@ class UserUpdatePageView(UpdateView):
         if form.non_field_errors():
             messages.error(self.request, form.non_field_errors(), extra_tags='warning')
         return super().form_invalid(form)
+
 
 class UserDeletePageView(DeleteView):
     model = DjangoUser

@@ -3,9 +3,9 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
-from django.db.models import ProtectedError
 from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
+
 
 class StatusFormMixin(FormMixin):
     model = Status
@@ -17,6 +17,7 @@ class StatusFormMixin(FormMixin):
         context['form'] = self.get_form()
         context.update(self.context_extra)
         return context
+
 
 class StatusPageView(StatusFormMixin, ListView):
     template_name = 'index_statuses.html'
@@ -30,6 +31,7 @@ class StatusPageView(StatusFormMixin, ListView):
     def get_queryset(self):
         return Status.objects.all()
     """
+
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
     template_name = 'create.html'
@@ -45,6 +47,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
                 messages.error(self.request, f"Error in {field}: {error}")
         return redirect('statuses')
 
+
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('statuses')
@@ -59,6 +62,7 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, f'{self.original_status} updated to {form.instance.status} successfully')
         return super().form_valid(form)
+
 
 class StatusDeletePageView(DeleteView):
     model = Status
