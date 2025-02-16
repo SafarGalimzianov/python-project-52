@@ -10,12 +10,16 @@
     </tr>
 </thead>
 <tbody>
-    {% for task in table_content %}
+    {% for content in table_content %}
         <tr>
-            <td>{{ task.id }}</td>
-            <td>{{ task.status }}</td>
+            <td>{{ content.id }}</td>
+            <td>{{ content.status }}</td>
             <td>
-                {% for label in task.labels.all %}
+                {% comment %}
+                Listing all labels associated with the task with the queryset
+                Each label has 2 fields: id and label
+                {% endcomment %}
+                {% for label in content.labels.all %}
                     {{ label.label }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>

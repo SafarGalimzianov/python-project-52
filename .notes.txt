@@ -52,3 +52,18 @@ def get_success_url(self):
 Forms
 - In the template, {{ field.label }} renders the human-readable label for a form field. In your setup, it's the label associated with the label field (defined in your LabelForm) used in the form.
 This label is automatically generated from the field definition in the model or can be explicitly set in the form.
+
+
+Django templates
+- {% for label in task.labels.all %}
+    {{ label.label }}{% if not forloop.last %}, {% endif %}
+{% endfor %}
+This code snippet iterates through all the labels associated with a specific task and displays them as a comma-separated list.
+
+Here's a breakdown:
+
+{% for label in task.labels.all %}: This is a Django template tag that starts a for loop. It iterates over each label in the task.labels.all() queryset. task.labels is a ManyToManyField in the Task model, representing the labels associated with that task. .all() retrieves all the associated Label objects.
+{{ label.label }}: This displays the label attribute of the current Label object. In the Label model, the label attribute stores the actual text of the label.
+{% if not forloop.last %}, {% endif %}: This is a conditional statement that checks if the current label is the last one in the loop. forloop.last is a special variable available within for loops in Django templates. It's True for the last iteration and False otherwise. If it's not the last label, a comma and a space (, ) are added after the label's text to separate it from the next label.
+{% endfor %}: This closes the for loop.
+In essence, this code takes all the labels associated with a task and renders them as a string where each label is separated by a comma, except for the last one. For example, if a task has labels "bug", "feature", and "urgent", this code would render: "bug, feature, urgent".

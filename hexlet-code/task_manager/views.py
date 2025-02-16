@@ -12,7 +12,7 @@ from task_manager.forms import TaskForm
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
-
+"""
 class TaskModifyMixin:
     def dispatch(self, request, *args, **kwargs):
         task = self.get_object()
@@ -20,16 +20,12 @@ class TaskModifyMixin:
             messages.error(request, f'Only the creator can {self.action} the task')
             return redirect('tasks')
         return super().dispatch(request, *args, **kwargs)
-
-
-"""class TaskFormMixin(FormMixin):
+"""
+"""
+class TaskFormMixin(FormMixin):
     model = Task
     form_class = TaskForm
     success_url = reverse_lazy('tasks')
-    context_extra = {
-        'fields_names': ['ID', 'Status', 'Labels', 'Creator', 
-                        'Responsible', 'Description', 'Actions']
-    }
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -91,15 +87,21 @@ class TaskPageView(LoginRequiredMixin, TaskFormMixin, ListView):
     template_name = 'index_tasks.html'
     context_object_name = 'table_content'
     context_extra = {
-        'title': 'Taskss',
+        'title': 'Tasks',
         'table_headers': ['ID', 'Task', 'Actions'],
         'form_action': 'task_create',
     }
 
 
-
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     template_name = 'create.html'
+    success_url = reverse_lazy('tasks')
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"Error in {field}: {error}")
+        return redirect('tasks')
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
@@ -108,8 +110,26 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         messages.success(self.request, 'Task created successfully')
         return super().form_valid(form)
 
-
+"""
 class TaskUpdatePageView(LoginRequiredMixin, TaskModifyMixin, TaskFormMixin, UpdateView):
+"""
+class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
+    template_name = 'update.html'
+    success_url = reverse_lazy('tasks')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        self.original_label = obj.label
+        return obj
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            f'{self.original_label} updated to {form.instance.label} successfully'
+        )
+        return super().form_valid(form)
+
+    '''
     template_name = 'update.html'
     action = 'modify'
 
@@ -118,12 +138,15 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskModifyMixin, TaskFormMixin, Upd
             form.instance.responsible = self.request.user
         messages.success(self.request, 'Task updated successfully')
         return super().form_valid(form)
+    '''
 
-
+"""
 class TaskDeletePageView(LoginRequiredMixin, TaskModifyMixin, DeleteView):
+"""
+class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('tasks')
-    action = 'delete'
+    # action = 'delete'
     
     def get(self, request, *args, **kwargs):
         """Override get to handle deletion without template"""

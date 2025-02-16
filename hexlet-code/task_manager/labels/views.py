@@ -54,7 +54,6 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        response = super().form_valid(form)
         messages.success(
             self.request,
             f'{self.original_label} updated to {form.instance.label} successfully'
