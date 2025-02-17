@@ -7,10 +7,13 @@ from django.urls import reverse_lazy
 from task_manager.models import Task
 from task_manager.users.models import User
 from task_manager.forms import TaskForm
+from task_manager.filters import TaskFilter
 
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
+    f = TaskFilter(request, queryset=Task.objects.all())
+    ...
 
 """
 class TaskModifyMixin:
@@ -88,7 +91,8 @@ class TaskPageView(LoginRequiredMixin, TaskFormMixin, ListView):
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Tasks',
-        'table_headers': ['ID', 'Task', 'Actions'],
+        'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
+                         'Responsible', 'Description', 'Actions'],
         'form_action': 'task_create',
     }
 
@@ -119,13 +123,13 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        self.original_label = obj.label
+        self.original_description = obj.description
         return obj
 
     def form_valid(self, form):
         messages.success(
             self.request,
-            f'{self.original_label} updated to {form.instance.label} successfully'
+            f'{self.original_description} updated to {form.instance.description} successfully'
         )
         return super().form_valid(form)
 

@@ -23,13 +23,13 @@
                     {{ label.label }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>
-            <td>{{ task.creator.username }}</td>
-            <td>{{ task.responsible.username|default:'-' }}</td>
-            <td>{{ task.description|truncatechars:50 }}</td>
+            <td>{{ content.creator.username }}</td>
+            <td>{{ content.responsible.username|default:'-' }}</td>
+            <td>{{ content.description|truncatechars:50 }}</td>
             <td>
-                {% if request.user == task.creator %}
-                    <a href="{% url 'task_update' task.id %}">Edit</a>
-                    <form method="post" action="{% url 'task_delete' task.id %}" style="display:inline;">
+                {% if request.user == content.creator %}
+                    <a href="{% url 'task_update' content.id %}">Edit</a>
+                    <form method="post" action="{% url 'task_delete' content.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
                     </form>
