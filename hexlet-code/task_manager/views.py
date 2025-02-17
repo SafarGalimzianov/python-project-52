@@ -8,11 +8,15 @@ from task_manager.models import Task
 from task_manager.users.models import User
 from task_manager.forms import TaskForm
 from task_manager.filters import TaskFilter
+from django_filters.views import FilterView
 
 
-class HomePageView(TemplateView):
+class HomePageView(FilterView):
+    model = Task
+    filterset_class = TaskFilter
     template_name = 'home.html'
-    f = TaskFilter(request, queryset=Task.objects.all())
+    context_object_name = 'tasks'
+
     ...
 
 """
