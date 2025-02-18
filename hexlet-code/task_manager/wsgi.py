@@ -11,6 +11,11 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+import rollbar
+from task_manager.settings import ROLLBAR
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'task_manager.settings')
+
+rollbar.init(**ROLLBAR)
 
 application = get_wsgi_application()
