@@ -34,7 +34,7 @@ rps: \
 #
 
 ts:
-	@$(U) pytest .
+	@$(UM) test
 
 l:
 	@$(U) ruff check hexlet-code

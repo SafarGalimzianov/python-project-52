@@ -10,9 +10,18 @@ class LabelModelTest(TestCase):
     def test_field(self):
         field_content = {
             'status': Status.objects.create(status='status field'),
-            'labels': [Label.objects.create(label='label field 1'), Label.objects.create(label='label field 2')],
-            'creator': User.objects.create_user(username='creator username field', password='creator password field'),
-            'responsible': User.objects.create_user(username='responsible username field', password='responsible password field'),
+            'labels': [
+                Label.objects.create(label='label field 1'),
+                Label.objects.create(label='label field 2')
+            ],
+            'creator': User.objects.create_user(
+                username='creator username field',
+                password='creator password field'
+            ),
+            'responsible': User.objects.create_user(
+                username='responsible username field',
+                password='responsible password field'
+            ),
             'description': 'description field',
         }
         task_object = Task.objects.create(
@@ -23,11 +32,17 @@ class LabelModelTest(TestCase):
         )
         self.assertEqual(field_content['description'], str(task_object))
         self.assertEqual(field_content['status'], task_object.status)
-        task_object.labels.set(field_content['labels'][0])
-        self.assertEqual(field_content['labels'][0], task_object.labels.all()[0])
+        # [] because .set requires iterable
+        task_object.labels.set([field_content['labels'][0]])
+        # list() because need to turn QuerySet to List
+        self.assertEqual(field_content['labels'][0],
+                         list(task_object.labels.all())[0])
+        # .add does not require iterable, so no list
         task_object.labels.add(field_content['labels'][1])
-        self.assertEqual(field_content['labels'][1], task_object.labels.all()[1])
-        self.assertEqual(field_content['labels'], list(task_object.labels.all()))
+        self.assertEqual(field_content['labels'][1],
+                         list(task_object.labels.all())[1])
+        self.assertEqual(field_content['labels'],
+                         list(task_object.labels.all()))
 
 
 '''

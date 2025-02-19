@@ -83,3 +83,8 @@ On line 663 in query.py (or around that area), the create method is defined to i
 However, Django’s ORM doesn’t handle many‑to‑many fields in that initial insert because many‑to‑many relationships use a separate join table.
 An instance must first be saved (thus, getting its primary key) before you can link related objects via a many‑to‑many field.
 That's why—you must call methods such as add() after the object is created to update the many‑to‑many relations.
+
+Tests
+Database
+Django reads your DATABASES setting to establish a connection to the remote DB. When you run tests,
+it clones that connection and creates a new test database (typically named by prepending "test_") using the remote DB’s creation commands, provided the remote server allows database creation. This isolates test changes from your production database
