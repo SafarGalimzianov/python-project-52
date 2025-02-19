@@ -17,7 +17,7 @@
             <td>
                 {% comment %}
                 Listing all labels associated with the task with the queryset
-                Each label has 2 fields: id and label
+                Each label has 2 fields: id and label = label.id and label.label
                 {% endcomment %}
                 {% for label in content.labels.all %}
                     {{ label.label }}{% if not forloop.last %}, {% endif %}

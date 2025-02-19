@@ -71,3 +71,15 @@ In essence, this code takes all the labels associated with a task and renders th
 
 - django_filters
 Without setting the filterset_class, the view falls back to returning all tasks from the model's default queryset. This means that typing into the search input (the "q" parameter) will have no effect since the FilterView won't know to process and filter by description or any other field.
+
+Models
+Fields
+In Django, Many‑to‑many relationships (like Task.labels) aren’t saved until the task instance is created.
+That's why you first create the task and then assign to its many‑to‑many field using methods like add() or set().
+See this explanation for details.
+https://docs.djangoproject.com/en/stable/topics/db/examples/many_to_many/
+
+On line 663 in query.py (or around that area), the create method is defined to insert a new record into the database.
+However, Django’s ORM doesn’t handle many‑to‑many fields in that initial insert because many‑to‑many relationships use a separate join table.
+An instance must first be saved (thus, getting its primary key) before you can link related objects via a many‑to‑many field.
+That's why—you must call methods such as add() after the object is created to update the many‑to‑many relations.
