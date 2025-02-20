@@ -1,6 +1,6 @@
 U := uv run
 UP := uv run python
-UM := uv run python hexlet-code/manage.py
+UM := uv run python task_manager/manage.py
 
 build:
 	./build.sh
@@ -12,19 +12,19 @@ install:
 collectstatic:
 
 migrate:
-	python hexlet-code/manage.py migrate
+	python task_manager/manage.py migrate
 
 render-start:
-	cd hexlet-code && python -m gunicorn task_manager.wsgi && cd ..
+	cd task_manager && python -m gunicorn task_manager.wsgi && cd ..
 
 t:
 	tree -I 'db.sqlite3|00*|build|project_4.egg-info|templates|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
 
 rls:
-	@$(U) python hexlet-code/manage.py runserver
+	@$(U) python task_manager/manage.py runserver
 
 rgs:
-	cd hexlet-code && python -m gunicorn --reload task_manager.wsgi && cd ..
+	cd task_manager && python -m gunicorn --reload task_manager.wsgi && cd ..
 
 # \
 Cannot have hexlet-code in path because of hyphen - in package name \
@@ -37,13 +37,13 @@ ts:
 	@$(UM) test
 
 l:
-	@$(U) ruff check hexlet-code
+	@$(U) ruff check task_manager
 
 lg:
-	less hexlet-code/debug.log
+	less task_manager/debug.log
 
 cl-lg:
-	truncate -s 0 hexlet-code/debug.log
+	truncate -s 0 task_manager/debug.log
 
 m:
 	@$(UM) makemigrations
