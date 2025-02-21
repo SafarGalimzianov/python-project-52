@@ -1,6 +1,6 @@
 U := uv run
 UP := uv run python
-UM := uv run python task_manager/manage.py
+UM := uv run python manage.py
 
 build:
 	./build.sh
@@ -12,7 +12,7 @@ install:
 collectstatic:
 
 migrate:
-	python task_manager/manage.py migrate
+	python manage.py migrate
 
 render-start:
 	cd task_manager && python -m gunicorn task_manager.wsgi && cd ..
@@ -21,7 +21,7 @@ t:
 	tree -I 'db.sqlite3|00*|build|project_4.egg-info|templates|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
 
 rls:
-	@$(U) python task_manager/manage.py runserver
+	@$(UM) runserver
 
 rgs:
 	cd task_manager && python -m gunicorn --reload task_manager.wsgi && cd ..
