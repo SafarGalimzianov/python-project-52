@@ -1,7 +1,9 @@
 [project]
 name = "hexlet-code"
 version = "0.1.0"
-description = "Add your description here"
+author = "Safar Galimzianov"
+email = "safargalimzianov@protonmail.com"
+description = "The task-management web-service"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
