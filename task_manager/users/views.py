@@ -93,6 +93,7 @@ class UserCreatePageView(UserFormMixin, CreateView):
     form_class = UserCreateForm
     context_extra = {
         'header': 'Users',
+        'button': 'Зарегистрировать'
     }
     success_url = reverse_lazy('users')
 
