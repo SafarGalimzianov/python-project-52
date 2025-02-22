@@ -27,6 +27,14 @@ class UserCreateForm(UserCreationForm):
         required=True,
         label='Имя пользователя'
     )
+    password1 = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput
+    )
+    password2 = forms.CharField(
+        label='Подтверждение пароля',
+        widget=forms.PasswordInput
+    )
 
     class Meta:
         model = User
