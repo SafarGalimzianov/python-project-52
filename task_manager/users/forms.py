@@ -26,7 +26,7 @@ class UserUpdateForm(UserChangeForm):
         help_text='Можете изменить'
     )
     password2 = forms.CharField(
-        label='Пароль2',
+        label='Подтверждение пароля',
         widget=forms.PasswordInput,
         required=False,
         help_text='Можете изменить'
