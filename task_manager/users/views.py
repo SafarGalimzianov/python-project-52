@@ -114,8 +114,10 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
     }
 
     def dispatch(self, request, *args, **kwargs):
+        """
         if not request.user.is_staff:
             return redirect('users')
+        """
         return super().dispatch(request, *args, **kwargs)
     
     def form_invalid(self, form):
