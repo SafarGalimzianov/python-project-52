@@ -67,7 +67,23 @@ class UserPageView(ListView):
     # Because using proxy model DjangoUser
     # The table User just references DjangoUser
     def get_queryset(self):
-        return DjangoUser.objects.all()
+        users = DjangoUser.objects.all()
+        transformed_users = []
+        for user in users:
+            if '-' in user.username:
+                first_name, last_name = user.username.split('-', 1)
+                first_name = first_name.capitalize()
+                last_name = last_name.capitalize()
+            else:
+                first_name = user.username.capitalize()
+                last_name = ''
+            transformed_users.append({
+                'id': user.id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'username': user.username
+            })
+        return transformed_users
 
 
 class UserCreatePageView(UserFormMixin, CreateView):
