@@ -15,17 +15,17 @@ class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=30,
         required=True,
-        label="Имя"  # Matches the test's expectation
+        label='Имя'
     )
     last_name = forms.CharField(
         max_length=30,
         required=True,
-        label="Фамилия"  # "Last Name" in Russian
+        label='Фамилия'
     )
     username = forms.CharField(
         max_length=30,
         required=True,
-        label="Фамилия"  # "Last Name" in Russian
+        label='Имя пользователя'
     )
 
     class Meta:
