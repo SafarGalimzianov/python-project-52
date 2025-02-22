@@ -25,14 +25,14 @@ class UserUpdateForm(UserChangeForm):
         required=False,
         help_text='Можете изменить'
     )
-    '''
+    
     password2 = forms.CharField(
         label='Пароль2',
         widget=forms.PasswordInput,
         required=False,
         help_text='Можете изменить'
     )
-    '''
+    
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name']
