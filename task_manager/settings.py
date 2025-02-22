@@ -56,12 +56,12 @@ LOGGING = {
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = os.getenv('DEBUG', "False")
 
 DB_URL = os.getenv('DB_URL')
 
 # why webserver and why is it needed to add localhost if this list is not empty?
-ALLOWED_HOSTS = ['python-project-52-h39m.onrender.com','127.0.0.1']
+ALLOWED_HOSTS = ['python-project-52-h39m.onrender.com', "localhost", "127.0.0.1", 'webserver']
 
 
 # Application definition
