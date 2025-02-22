@@ -20,7 +20,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
-                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
                 </li>
@@ -52,7 +51,7 @@
                         <button type="submit" class="nav-link">Выход</button>
                     </form>
                 </li>
-                {% else %}
+                {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
                 </li>
@@ -71,6 +70,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users_create' %}">Регистрация</a>
                 </li>
+                {% endcomment %}
                 {% endif %}
             </ul>
         </div>
