@@ -21,7 +21,12 @@ class UserLoginView(LoginView):
             'action': reverse('login'),
         })
         return context
-    
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Вы залогинены', extra_tags='.alert')
+        return response
+
     def form_invalid(self, form):
         flash_messages = {
             'username_does_not_exist': 'Please enter a valid username',
