@@ -19,7 +19,6 @@ class StatusPageView(StatusFormMixin, ListView):
         return Status.objects.all()
 
 
-
 class StatusCreatePageView(StatusFormMixin, CreateView):
     template_name = 'create.html'
     success_url = reverse_lazy('statuses')
