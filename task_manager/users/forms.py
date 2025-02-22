@@ -4,11 +4,12 @@ from django import forms
 from task_manager.users.models import User
 
 class UserUpdateForm(UserChangeForm):
+    password1 = None
+    password2 = None
     password = None
-
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name']
+        fields = ['username', 'first_name', 'last_name', 'password', 'password1', 'password2']
 
 
 class UserCreateForm(UserCreationForm):
