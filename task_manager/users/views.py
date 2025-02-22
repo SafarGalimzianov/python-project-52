@@ -98,6 +98,7 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
         if not request.user.is_staff:
             return redirect('users')
         """
+        messages.success(self.request, 'Пользователь успешно изменен', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
     
     def form_invalid(self, form):
