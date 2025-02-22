@@ -97,6 +97,10 @@ class UserCreatePageView(UserFormMixin, CreateView):
     }
     success_url = reverse_lazy('login')
 
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Пользователь успешно зарегистрирован', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
+
 
 class UserUpdatePageView(UserFormMixin, UpdateView):
     model = DjangoUser
