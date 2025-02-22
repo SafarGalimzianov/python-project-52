@@ -47,9 +47,9 @@ class UserLoginView(LoginView):
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
 
-    def get_context_data(self, **kwargs):
-        messages.success(self.request, 'Вы разлогинены', extra_tags='.alert')
-        return super().get_context_data(**kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, 'Вы разлогинены', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserPageView(ListView):
