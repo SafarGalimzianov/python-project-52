@@ -112,7 +112,6 @@ class UserDeletePageView(DeleteView):
     model = DjangoUser
     template_name = 'delete.html'
     success_url = reverse_lazy('users')
-    form_class = UserDeleteForm
     context_extra = {
         'header': 'Users',
         'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
