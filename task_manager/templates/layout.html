@@ -45,12 +45,14 @@
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
                 {% endcomment %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button type="submit" class="nav-link">Выход</button>
                     </form>
                 </li>
+                {% endif %}
                 {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
