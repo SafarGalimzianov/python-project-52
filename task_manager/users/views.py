@@ -4,7 +4,7 @@ from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.contrib.auth.models import User as DjangoUser
-from task_manager.users.forms import UserCreateForm, UserUpdateForm, UserDeleteForm
+from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
