@@ -10,6 +10,12 @@ class UserUpdateForm(UserChangeForm):
         required=False,
         help_text='Можете изменить'
     )
+    password2 = forms.CharField(
+        label='Пароль2',
+        widget=forms.PasswordInput,
+        required=False,
+        help_text='Можете изменить'
+    )
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name']
@@ -23,7 +29,10 @@ class UserUpdateForm(UserChangeForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
         if password1:
+            user.set_password(password1)
+        if password2:
             user.set_password(password1)
         if commit:
             user.save()
