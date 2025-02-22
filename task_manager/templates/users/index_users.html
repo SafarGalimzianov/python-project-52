@@ -20,14 +20,12 @@
                         <td>{{ content.id }}</td>
                         <td>{{ content.first_name }} {{ content.last_name }}</td>
                         <td>{{ content.username }}</td>
-                        {% if request.user.is_staff %}
                         <td class="px-4 py-3">
-                            <a href="{% url 'users_update' pk=content.id %}">Update</a>
+                            <a href="{% url 'users_update' pk=content.id %}">Изменить</a>
                         </td>
                         <td class="px-4 py-3">
-                            <a href="{% url 'users_delete' pk=content.id %}">Delete</a>
+                            <a href="{% url 'users_delete' pk=content.id %}">Удалить</a>
                         </td>
-                        {% endif %}
                     </tr>
                     {% endfor %}
                     </tbody>
