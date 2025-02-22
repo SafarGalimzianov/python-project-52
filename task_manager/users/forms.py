@@ -4,11 +4,30 @@ from django import forms
 from task_manager.users.models import User
 
 class UserUpdateForm(UserChangeForm):
-    password = None
+    password1 = forms.CharField(
+        label='Пароль1',
+        widget=forms.PasswordInput,
+        required=False,
+        help_text='Можете изменить'
+    )
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'password']
+        fields = ['username', 'first_name', 'last_name']
 
+    def clean_password(self):
+        password1 = self.cleaned_data.get('password1')
+        if password1:
+            return password1
+        return None
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password1 = self.cleaned_data.get('password1')
+        if password1:
+            user.set_password(password1)
+        if commit:
+            user.save()
+        return user
 
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(
