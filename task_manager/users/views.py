@@ -109,7 +109,7 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
     form_class = UserUpdateForm
     context_extra = {
         'header': 'Users',
-        'fields_names': ['ID', 'username'],
+        'fields_names': ['ID', 'username', 'first_name', 'last_name'],
         # 'form_action': 'users_update',
     }
 
