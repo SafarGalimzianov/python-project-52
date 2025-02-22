@@ -15,7 +15,7 @@ migrate:
 	@$(UM) migrate
 
 render-start:
-	@$(UP) -m gunicorn task_manager.wsgi
+	python -m gunicorn task_manager.wsgi
 
 t:
 	tree -I 'db.sqlite3|00*|build|project_4.egg-info|templates|__init__.py|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
