@@ -95,7 +95,7 @@ class UserCreatePageView(UserFormMixin, CreateView):
         'header': 'Users',
         'button': 'Зарегистрировать'
     }
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('login')
 
 
 class UserUpdatePageView(UserFormMixin, UpdateView):
