@@ -64,13 +64,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Ярлыки</a>
                 </li>
+                {% endcomment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Вход</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users_create' %}">Регистрация</a>
                 </li>
-                {% endcomment %}
                 {% endif %}
             </ul>
         </div>
