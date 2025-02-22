@@ -20,17 +20,19 @@ class UserUpdateForm(UserChangeForm):
         label='Имя пользователя'
     )
     password1 = forms.CharField(
-        label='Пароль1',
+        label='Пароль',
         widget=forms.PasswordInput,
         required=False,
         help_text='Можете изменить'
     )
+    '''
     password2 = forms.CharField(
         label='Пароль2',
         widget=forms.PasswordInput,
         required=False,
         help_text='Можете изменить'
     )
+    '''
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name']
