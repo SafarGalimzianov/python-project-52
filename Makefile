@@ -1,6 +1,6 @@
 U := uv run
-UP := uv run python
-UM := uv run python manage.py
+UP := $(U) python
+UM := $(UP) manage.py
 
 build:
 	./build.sh
@@ -12,26 +12,19 @@ install:
 collectstatic:
 
 migrate:
-	python manage.py migrate
+	@$(UM) migrate
 
 render-start:
-	cd task_manager && python -m gunicorn task_manager.wsgi && cd ..
+	@$(UP) -m gunicorn task_manager.wsgi
 
 t:
-	tree -I 'db.sqlite3|00*|build|project_4.egg-info|templates|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
+	tree -I 'db.sqlite3|00*|build|project_4.egg-info|templates|__init__.py|__pycache__|*.pyc|asgi.py|wsgi.py|Makefile|pyproject.toml|uv.lock|README.md|env|build.sh' .
 
 rls:
 	@$(UM) runserver
 
 rgs:
-	cd task_manager && python -m gunicorn --reload task_manager.wsgi && cd ..
-
-# \
-Cannot have hexlet-code in path because of hyphen - in package name \
-So hexlet-code is not a valid Python identifier, so Python cannot resolve it as a package \
-rps: \
-	python -m gunicorn hexlet-code.task_manager.wsgi \
-#
+	@$(UP) -m gunicorn --reload task_manager.wsgi
 
 ts:
 	@$(UM) test

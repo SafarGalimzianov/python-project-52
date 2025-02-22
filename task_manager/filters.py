@@ -36,7 +36,7 @@ In summary, the filters provide a way to narrow down the Task objects based on s
 
 import django_filters
 from django.db.models import Q
-from task_manager.models import Task
+from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from django.contrib.auth import get_user_model
