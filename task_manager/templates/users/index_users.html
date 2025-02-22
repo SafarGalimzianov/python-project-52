@@ -18,7 +18,7 @@
                     {% for content in table_content %}
                     <tr>
                         <td>{{ content.id }}</td>
-                        <td>{{ content.first_name }}</td>
+                        <td>{{ content.first_name }} {{ content.last_name }}</td>
                         <td>{{ content.last_name }}</td>
                         {% if request.user.is_staff %}
                         <td class="px-4 py-3">
