@@ -17,3 +17,5 @@ project_4.egg-info*
 
 # Logger (automatically created by Django in settings.py via delay: True)
 debug.log
+build/
+hexlet_code.egg-info

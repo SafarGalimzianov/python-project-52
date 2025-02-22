@@ -13,10 +13,11 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "whitenoise[brotli]>=6.8.2",
     "rollbar>=1.2.0",
-    "pytest>=8.3.4",
 ]
 
 [dependency-groups]
 dev = [
+    "pytest-django>=4.10.0",
+    "pytest>=8.3.4",
     "ruff>=0.9.4",
 ]
