@@ -8,10 +8,9 @@ from task_manager.tasks.models import Task
 from task_manager.tasks.mixins import TaskFormMixin
 from task_manager.tasks.filters import TaskFilter
 
-class TaskPageView(LoginRequiredMixin, TaskFormMixin, ListView, FilterView):
+class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     template_name = 'tasks/index_tasks.html'
     filterset_class = TaskFilter
-    context_object_name = 'table_content'
     context_extra = {
         'title': 'Tasks',
         'table_headers': ['ID', 'Status', 'Labels', 'Creator', 

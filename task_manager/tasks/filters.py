@@ -60,4 +60,4 @@ class TaskFilter(django_filters.FilterSet):
         # return queryset.filter(description__icontains=value, labels__label__icontains=value)
         return queryset.filter(
             Q(description__icontains=value) | Q(labels__label__icontains=value)
-    )
+        ).distinct()

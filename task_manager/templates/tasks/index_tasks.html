@@ -1,9 +1,7 @@
-{% extends 'templates/index.html' %}
+{% extends 'index.html' %}
 {% load custom_tags %}
 {% block title %}{{ title }}{% endblock %}
-{% block search %}
-{% import 'templates/search.html' %}
-{% endblock %}
+{% block search %}{% include 'search.html' %}{% endblock %}
 {% block contents %}
 <thead>
     <tr>
