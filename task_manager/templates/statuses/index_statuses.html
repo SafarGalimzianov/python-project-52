@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block contents %}
+{% comment %}
 <thead>
     <tr>
         {% for header in table_headers %}
@@ -8,6 +9,7 @@
         {% endfor %}
     </tr>
 </thead>
+{% endcomment %}
 <tbody>
     {% for content in table_content %}
         <tr>
