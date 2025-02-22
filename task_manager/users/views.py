@@ -14,7 +14,6 @@ from task_manager.users.mixins import UserFormMixin
 class UserLoginView(LoginView):
     template_name = 'login.html'
     form_class = AuthenticationForm
-    next_page = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,14 +41,15 @@ class UserLoginView(LoginView):
             messages.error(self.request, flash_messages['something_wrong'], extra_tags='warning')
 
         return super().form_invalid(form)
+    
+    next_page = reverse_lazy('home')
 
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
-
-    def dispatch(self, request, *args, **kwargs):
-        messages.success(request, 'Вы разлогинены', extra_tags='.alert')
-        return super().dispatch(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        messages.success(self.request, 'Вы разлогинены', extra_tags='.alert')
+        return super().get_context_data(**kwargs)
 
 
 class UserPageView(ListView):
