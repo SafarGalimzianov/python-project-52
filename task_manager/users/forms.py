@@ -22,6 +22,11 @@ class UserCreateForm(UserCreationForm):
         required=True,
         label="Фамилия"  # "Last Name" in Russian
     )
+    username = forms.CharField(
+        max_length=30,
+        required=True,
+        label="Фамилия"  # "Last Name" in Russian
+    )
 
     class Meta:
         model = User
