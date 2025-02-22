@@ -1,0 +1,47 @@
+<div class="container mt-4">
+  <form method="get" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Search tasks..." value="{{ request.GET.q }}">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+
+  {% if tasks %}
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Labels</th>
+          <th>Creator</th>
+          <th>Responsible</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr>
+          <td>{{ task.id }}</td>
+          <td>{{ task.status }}</td>
+          <td>
+            {% for label in task.labels.all %}
+              {{ label.label }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </td>
+          <td>{{ task.creator.username|default:"-" }}</td>
+          <td>{{ task.responsible.username|default:"-" }}</td>
+          <td>{{ task.description }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">No tasks found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>No tasks available.</p>
+  {% endif %}
+</div>

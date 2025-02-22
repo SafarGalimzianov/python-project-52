@@ -46,7 +46,7 @@ class UserLogoutView(LogoutView):
 
 
 class UserPageView(ListView):
-    template_name = 'index_users.html'
+    template_name = 'users/index_users.html'
     model = User
     context_object_name = 'users'
 

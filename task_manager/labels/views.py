@@ -2,25 +2,11 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.views.generic.edit import FormMixin
 from task_manager.labels.models import Label
-from task_manager.labels.forms import LabelForm
-
-
-class LabelFormMixin(FormMixin):
-    model = Label
-    form_class = LabelForm
-    context_extra = {}
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        context.update(self.context_extra)
-        return context
-
+from task_manager.labels.mixins import LabelFormMixin
 
 class LabelPageView(LabelFormMixin, ListView):
-    template_name = 'index_labels.html'
+    template_name = 'labels/index_labels.html'
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Labels',
@@ -30,7 +16,8 @@ class LabelPageView(LabelFormMixin, ListView):
 
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
-    template_name = 'create.html' # Never rendered.Only because required by CreateView
+    # Never rendered. Only because required by CreateView
+    template_name = 'create.html'
     success_url = reverse_lazy('labels')
 
     def form_valid(self, form):

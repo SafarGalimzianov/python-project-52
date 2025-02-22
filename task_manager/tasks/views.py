@@ -2,24 +2,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
+from django_filters.views import FilterView
 from task_manager.tasks.models import Task
-from task_manager.tasks.forms import TaskForm
+from task_manager.tasks.mixins import TaskFormMixin
+from task_manager.tasks.filters import TaskFilter
 
-class TaskFormMixin(FormMixin):
-    model = Task
-    form_class = TaskForm
-    context_extra = {}
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        context.update(self.context_extra)
-        return context
-
-class TaskPageView(LoginRequiredMixin, TaskFormMixin, ListView):
-    template_name = 'index_tasks.html'
+class TaskPageView(LoginRequiredMixin, TaskFormMixin, ListView, FilterView):
+    template_name = 'tasks/index_tasks.html'
+    filterset_class = TaskFilter
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Tasks',

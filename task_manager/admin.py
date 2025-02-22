@@ -1,5 +1,4 @@
 from django.contrib import admin
-from task_manager.models import Task
 
 '''
 Register the given model(s) with the given admin class.
@@ -10,4 +9,3 @@ If an admin class isn't given, use ModelAdmin (the default admin options). If ke
 
 If a model is already registered, raise AlreadyRegistered.
 '''
-admin.site.register(Task)
