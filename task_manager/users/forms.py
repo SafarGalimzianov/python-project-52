@@ -1,5 +1,4 @@
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django import forms
 from task_manager.users.models import User
 

@@ -3,9 +3,8 @@ from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from task_manager.users.forms import UserCreateForm
 from django.contrib.auth.models import User as DjangoUser
-from task_manager.users.forms import UserUpdateForm
+from task_manager.users.forms import UserCreateForm, UserUpdateForm, UserDeleteForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
@@ -111,12 +110,14 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
 
 class UserDeletePageView(DeleteView):
     model = DjangoUser
+    template_name = 'delete.html'
     success_url = reverse_lazy('users')
+    form_class = UserDeleteForm
+    context_extra = {
+        'header': 'Users',
+        'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
+    }
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return redirect('users')
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return self.delete(request, *args, **kwargs)
