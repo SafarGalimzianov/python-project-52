@@ -3,7 +3,7 @@ from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from task_manager.users.forms import User
+from task_manager.users.forms import UserCreateForm
 from django.contrib.auth.models import User as DjangoUser
 from task_manager.users.forms import UserUpdateForm
 from django.urls import reverse_lazy
@@ -67,6 +67,8 @@ class UserPageView(ListView):
     # Because using proxy model DjangoUser
     # The table User just references DjangoUser
     def get_queryset(self):
+        return DjangoUser.objects.all()
+        '''
         users = DjangoUser.objects.all()
         transformed_users = []
         for user in users:
@@ -84,15 +86,13 @@ class UserPageView(ListView):
                 'username': user.username
             })
         return transformed_users
-
+        '''
 
 class UserCreatePageView(UserFormMixin, CreateView):
     template_name = 'create.html'
-    form_class = UserCreationForm
+    form_class = UserCreateForm
     context_extra = {
         'header': 'Users',
-        'fields_names': ['ID', 'username'],
-        # 'form_action': 'users_create',
     }
     success_url = reverse_lazy('users')
 
