@@ -4,6 +4,21 @@ from django import forms
 from task_manager.users.models import User
 
 class UserUpdateForm(UserChangeForm):
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Имя'
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Фамилия'
+    )
+    username = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Имя пользователя'
+    )
     password1 = forms.CharField(
         label='Пароль1',
         widget=forms.PasswordInput,
