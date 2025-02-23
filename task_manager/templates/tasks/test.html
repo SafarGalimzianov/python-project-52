@@ -74,8 +74,8 @@
                   {% endfor %}
                 </td>
                 <td>{{ task.creator.username|default:"-" }}</td>
-                <td>{{ task.executors.first_name }} {{ task.executors.last_name }}</td>
-                <td>{{ task.executors.username|default:"-" }}</td>
+                <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
+                <td>{{ task.executor.username|default:"-" }}</td>
                 <td>{{ task.description }}</td>
               </tr>
               {% empty %}
