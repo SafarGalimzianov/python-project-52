@@ -54,10 +54,16 @@ class TaskFilter(django_filters.FilterSet):
     class Meta:
         model = Task
         fields = ['status', 'creator', 'responsible', 'description', 'labels']
+    
+    def filter_self_tasks(self, queryset, name, value):
+        if value:  # if checkbox is checked
+            return queryset.filter(creator=self.request.user)
+        return queryset
 
     def filter_by_q(self, queryset, name, value):
         # AND
-        # return queryset.filter(description__icontains=value, labels__label__icontains=value)
+        return queryset.filter(description__icontains=value, labels__label__icontains=value)
+        # OR
         return queryset.filter(
             Q(description__icontains=value) | Q(labels__label__icontains=value)
         ).distinct()
