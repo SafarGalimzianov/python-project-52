@@ -9,6 +9,7 @@ from task_manager.tasks.mixins import TaskFormMixin
 from task_manager.tasks.filters import TaskFilter
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
+from task_manager.users.models import User
 
 class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     template_name = 'tasks/test.html'
@@ -20,6 +21,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
         'form_action': 'task_create',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
+        'responsibles': User.objects.all(),
     }
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
