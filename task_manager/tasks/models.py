@@ -3,6 +3,7 @@ from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 
 class Task(models.Model):
+    name = models.CharField(max_length=150)
     status = models.ForeignKey(Status, on_delete=models.PROTECT, related_name='tasks')
     labels = models.ManyToManyField(Label, related_name='tasks')
     creator = models.ForeignKey(

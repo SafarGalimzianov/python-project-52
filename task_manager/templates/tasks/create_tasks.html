@@ -8,10 +8,14 @@
         {% csrf_token %}
         <div class="mb-3">
           <label for="id_status" class="form-label">Имя</label>
+          <input type="text" class="form-control" id="id_status" name="name" placeholder="Enter name">
+        </div>
+        <div class="mb-3">
+          <label for="id_status" class="form-label">Статус</label>
           <input type="text" class="form-control" id="id_status" name="status" placeholder="Enter status">
         </div>
         <div class="mb-3">
-          <label for="id_labels" class="form-label">Статус</label>
+          <label for="id_labels" class="form-label">Ярлык</label>
           <input type="text" class="form-control" id="id_labels" name="labels" placeholder="Enter labels">
         </div>
         <div class="mb-3">

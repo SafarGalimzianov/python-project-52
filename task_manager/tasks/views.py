@@ -13,7 +13,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     filterset_class = TaskFilter
     context_extra = {
         'title': 'Tasks',
-        'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
+        'table_headers': ['ID', 'Name', 'Status', 'Labels', 'Creator', 
                          'Responsible', 'Description', 'Actions'],
         'form_action': 'task_create',
     }
