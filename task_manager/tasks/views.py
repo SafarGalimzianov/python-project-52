@@ -34,7 +34,8 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         'form_action': 'task_create',
         'button': 'Создать задачу',
         'statuses': Status.objects.all(),
-        'label': Label.objects.all(),
+        'labels': Label.objects.all(),
+        'responsibles': User.objects.all(),
     }
 
     def form_invalid(self, form):
