@@ -19,18 +19,18 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="id_labels" class="form-label">Ярлык</label>
-          <select class="form-control" id="id_labels" name="labels" multiple>
-            {% for label in labels %}
-              <option value="{{ label.id }}">{{ label.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="mb-3">
           <label for="id_executor" class="form-label">Исполнитель</label>
           <select class="form-control" id="id_executor" name="executor">
             {% for executor in executors %}
               <option value="{{ executor.id }}">{{ executor.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="id_labels" class="form-label">Ярлык</label>
+          <select class="form-control" id="id_labels" name="labels" multiple>
+            {% for label in labels %}
+              <option value="{{ label.id }}">{{ label.name }}</option>
             {% endfor %}
           </select>
         </div>
