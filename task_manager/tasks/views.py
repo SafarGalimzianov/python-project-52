@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView, DetailView
 from django.urls import reverse_lazy
 from django_filters.views import FilterView
 from task_manager.tasks.models import Task
@@ -23,6 +23,16 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
         'labels': Label.objects.all(),
         'executors': User.objects.all(),
     }
+
+class TaskShowPageView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'tasks/show_task.html'
+    context_object_name = 'task'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Task Details'
+        return context
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     template_name = 'tasks/create_tasks.html'
