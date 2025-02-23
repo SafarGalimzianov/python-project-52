@@ -6,7 +6,7 @@ from task_manager.labels.models import Label
 from task_manager.labels.mixins import LabelFormMixin
 
 class LabelPageView(LabelFormMixin, ListView):
-    template_name = 'labels/index_labels.html'
+    template_name = 'labels/test.html'
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Labels',
@@ -17,11 +17,12 @@ class LabelPageView(LabelFormMixin, ListView):
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
     # Never rendered. Only because required by CreateView
-    template_name = 'create.html'
+    template_name = 'labels/create_labels.html'
     success_url = reverse_lazy('labels')
 
     def form_valid(self, form):
-        messages.success(self.request, f'{form.instance.label} created successfully')
+        messages.success(self.request, 'Ярлык успешно создан', extra_tags='.alert')
+        # messages.success(self.request, f'{form.instance.label} created successfully')
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -32,26 +33,39 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
 
 
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
-    template_name = 'update.html'
+    template_name = 'labels/update_labels.html'
     success_url = reverse_lazy('labels')
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        self.original_label = obj.label
+        self.original_label = obj.name
         return obj
 
     def form_valid(self, form):
+        messages.success(self.request, 'Статус успешно изменен', extra_tags='.alert')
+        '''
         messages.success(
             self.request,
             f'{self.original_label} updated to {form.instance.label} successfully'
         )
+        '''
         return super().form_valid(form)
 
 
 class LabelDeletePageView(DeleteView):
     model = Label
+    template_name = 'delete.html'
     success_url = reverse_lazy('labels')
+    context_extra = {
+        'header': 'Labels',
+        'fields_names': ['ID', 'name'],
+    }
 
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Ярлык успешно удален', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
+
+    '''
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.tasks.exists():
@@ -59,3 +73,4 @@ class LabelDeletePageView(DeleteView):
             return redirect('labels')
         messages.success(self.request, f'{self.object.label} deleted successfully')
         return super().delete(request, *args, **kwargs)
+    '''

@@ -7,7 +7,7 @@ from task_manager.statuses.mixins import StatusFormMixin
 
 class StatusPageView(StatusFormMixin, ListView):
     # template_name = 'statuses/index_statuses.html'
-    template_name = 'test.html'
+    template_name = 'statuses/test.html'
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Statuses',
