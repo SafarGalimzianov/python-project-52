@@ -19,7 +19,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     }
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
-    template_name = 'create.html'
+    template_name = 'tasks/create_tasks.html'
     success_url = reverse_lazy('tasks')
     context_extra = {
         'title': 'Tasks',
@@ -36,9 +36,11 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         return redirect('tasks')
 
     def form_valid(self, form):
+        '''
         form.instance.creator = self.request.user
         if not self.request.user.is_staff:
             form.instance.responsible = self.request.user
+        '''
         messages.success(self.request, 'Задача успешно создана')
         return super().form_valid(form)
 
