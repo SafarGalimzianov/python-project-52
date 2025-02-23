@@ -11,7 +11,7 @@ from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from task_manager.users.models import User
 
-class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
+class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     template_name = 'tasks/test.html'
     filterset_class = TaskFilter
     context_extra = {
