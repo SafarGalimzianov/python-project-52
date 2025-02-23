@@ -25,7 +25,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
     success_url = reverse_lazy('statuses')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Статус успешно создан')
+        messages.success(self.request, 'Статус успешно создан', extra_tags='.alert')
         # messages.success(self.request, f'{form.instance.status} created successfully')
         return super().form_valid(form)
 
@@ -34,11 +34,11 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
             for error in errors:
                 messages.error(self.request, f"Error in {field}: {error}")
         return redirect('statuses')
-    
+    '''
     def dispatch(self, request, *args, **kwargs):
         messages.success(self.request, 'Статус успешно создан', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
-
+    '''
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
     template_name = 'update.html'
