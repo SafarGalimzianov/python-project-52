@@ -35,6 +35,7 @@ In summary, the filters provide a way to narrow down the Task objects based on s
 '''
 
 import django_filters
+from django_filters import BooleanFilter
 from django.db.models import Q
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
@@ -44,30 +45,21 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class TaskFilter(django_filters.FilterSet):
-    q = django_filters.CharFilter(method='filter_by_q', label="Search in description")
     status = django_filters.ModelChoiceFilter(queryset=Status.objects.all(), label="Status")
     creator = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Creator")
     responsible = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Responsible")
     description = django_filters.CharFilter(lookup_expr='icontains', label="Description")
     labels = django_filters.ModelMultipleChoiceFilter(queryset=Label.objects.all(), label="Labels")
-    self_tasks = django_filters.BooleanFilter(method='filter_self_tasks', label="Only my tasks")
+    self_tasks = BooleanFilter(method='filter_by_self_tasks', label="Only my tasks")
 
     class Meta:
         model = Task
-        fields = ['status', 'creator', 'responsible', 'description', 'labels', 'self_tasks']
+        fields = ['status', 'creator', 'responsible', 'description', 'labels']
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super().__init__(*args, **kwargs)
-
-
-    def filter_self_tasks(self, queryset, name, value):
-        if value:  # if checkbox is checked
-            return queryset.filter(creator=self.request.user)
-        return queryset
-
-    def filter_by_q(self, queryset, name, value):
+    def filter_by_self_tasks(self, queryset, name, value):
         # AND
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(creator=self.request.user)
         return queryset.filter(description__icontains=value, labels__label__icontains=value)
         # OR
         return queryset.filter(
