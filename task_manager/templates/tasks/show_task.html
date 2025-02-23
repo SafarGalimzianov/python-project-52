@@ -31,6 +31,10 @@
                         <td>{{ task.executor.username|default:'-' }}</td>
                     </tr>
                     <tr>
+                        <th>Executor</th>
+                        <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
+                    </tr>
+                    <tr>
                         <th>Description</th>
                         <td>{{ task.description }}</td>
                     </tr>
