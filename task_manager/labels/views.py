@@ -21,7 +21,7 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
     success_url = reverse_lazy('labels')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Ярлык успешно создан', extra_tags='.alert')
+        messages.success(self.request, 'Метка успешно создана', extra_tags='.alert')
         # messages.success(self.request, f'{form.instance.label} created successfully')
         return super().form_valid(form)
 
@@ -42,7 +42,7 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, 'Статус успешно изменен', extra_tags='.alert')
+        messages.success(self.request, 'Метка успешно изменена', extra_tags='.alert')
         '''
         messages.success(
             self.request,
@@ -62,7 +62,7 @@ class LabelDeletePageView(DeleteView):
     }
 
     def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Ярлык успешно удален', extra_tags='.alert')
+        messages.success(self.request, 'Vtnrf успешно удаленf', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
 
     '''
