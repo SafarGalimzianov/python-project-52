@@ -7,6 +7,8 @@ from django_filters.views import FilterView
 from task_manager.tasks.models import Task
 from task_manager.tasks.mixins import TaskFormMixin
 from task_manager.tasks.filters import TaskFilter
+from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 
 class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     template_name = 'tasks/test.html'
@@ -16,6 +18,8 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
         'table_headers': ['ID', 'Name', 'Status', 'Labels', 'Creator', 
                          'Responsible', 'Description', 'Actions'],
         'form_action': 'task_create',
+        'statuses': Status.objects.all(),
+        'labels': Label.objects.all(),
     }
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
@@ -27,6 +31,8 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
                          'Responsible', 'Description', 'Actions'],
         'form_action': 'task_create',
         'button': 'Создать задачу',
+        'statuses': Status.objects.all(),
+        'label': Label.objects.all(),
     }
 
     def form_invalid(self, form):

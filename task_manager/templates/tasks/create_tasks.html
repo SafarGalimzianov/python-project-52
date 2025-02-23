@@ -7,16 +7,24 @@
       <form method="post" action="">
         {% csrf_token %}
         <div class="mb-3">
-          <label for="id_status" class="form-label">Имя</label>
-          <input type="text" class="form-control" id="id_status" name="name" placeholder="Enter name">
+          <label for="id_name" class="form-label">Имя</label>
+          <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter name">
         </div>
         <div class="mb-3">
           <label for="id_status" class="form-label">Статус</label>
-          <input type="text" class="form-control" id="id_status" name="status" placeholder="Enter status">
+          <select class="form-control" id="id_status" name="status">
+            {% for status in statuses %}
+              <option value="{{ status.id }}">{{ status.name }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="mb-3">
           <label for="id_labels" class="form-label">Ярлык</label>
-          <input type="text" class="form-control" id="id_labels" name="labels" placeholder="Enter labels">
+          <select class="form-control" id="id_labels" name="labels" multiple>
+            {% for label in labels %}
+              <option value="{{ label.id }}">{{ label.name }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="mb-3">
           <label for="id_responsible" class="form-label">Ответственный</label>
