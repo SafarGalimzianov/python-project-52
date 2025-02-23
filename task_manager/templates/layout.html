@@ -20,7 +20,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
-                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
                 </li>
@@ -33,29 +32,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'labels' %}">Ярлыки</a>
                 </li>
-                {% comment %}Admin panel{% endcomment %}
                 {% if request.user.is_staff %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">Admin Panel</a>
                         </li>
                 {% endif %}
-                {% comment %}
-                This by default makes GET request
-                But Django LogoutView requires POST
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-                {% endcomment %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button type="submit" class="nav-link">Выход</button>
                     </form>
                 </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
-                </li>
+                {% endif %}
                 {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Задачи</a>
@@ -67,6 +56,7 @@
                     <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Ярлыки</a>
                 </li>
                 {% endcomment %}
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Вход</a>
                 </li>
