@@ -32,7 +32,7 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
                          'Executors', 'Description', 'Actions'],
         'form_action': 'task_create',
-        'button': 'Создать задачу',
+        'button': 'Создать',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
         'executors': User.objects.all(),
