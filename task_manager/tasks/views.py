@@ -55,8 +55,8 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         return redirect('tasks')
 
     def form_valid(self, form):
-        '''
         form.instance.creator = self.request.user
+        '''
         if not self.request.user.is_staff:
             form.instance.responsible = self.request.user
         '''
