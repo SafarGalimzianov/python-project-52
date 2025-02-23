@@ -57,7 +57,6 @@
                 <th>Status</th>
                 <th>Labels</th>
                 <th>Creator</th>
-                <th>Full name</th>
                 <th>Executor</th>
                 <th>Description</th>
               </tr>
@@ -75,7 +74,6 @@
                 </td>
                 <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
                 <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
-                <td>{{ task.executor.username|default:"-" }}</td>
                 <td>{{ task.description }}</td>
                 <td>
                   <a href="{% url 'task_update' task.id %}">Изменить</a>
