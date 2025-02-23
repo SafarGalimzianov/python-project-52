@@ -58,8 +58,6 @@ class TaskFilter(django_filters.FilterSet):
 
     def filter_by_self_tasks(self, queryset, name, value):
         # AND
-        if value and self.request.user.is_authenticated:
-            return queryset.filter(creator=self.request.user)
         return queryset.filter(description__icontains=value, labels__label__icontains=value)
         # OR
         return queryset.filter(
