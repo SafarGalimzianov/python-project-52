@@ -20,11 +20,13 @@ class StatusPageView(StatusFormMixin, ListView):
     '''
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
-    template_name = 'create.html'
+    # template_name = 'create.html'
+    template_name = 'statuses/create_statuses.html'
     success_url = reverse_lazy('statuses')
 
     def form_valid(self, form):
-        messages.success(self.request, f'{form.instance.status} created successfully')
+        messages.success(self.request, 'Статус успешно создан')
+        # messages.success(self.request, f'{form.instance.status} created successfully')
         return super().form_valid(form)
 
     def form_invalid(self, form):

@@ -23,6 +23,7 @@
       </div>
     </div>
   <h1>Status Page</h1>
+  <a class="btn btn-primary mb-3" href="/statuses/create/">Создать статус</a>
   <table class="table">
     <thead>
       <tr>
@@ -35,7 +36,7 @@
       {% for status in table_content %}
         <tr>
           <td>{{ status.id }}</td>
-          <td>{{ status.status }}</td>
+          <td>{{ status.name }}</td>
           <td>
             <a href="{% url 'status_update' status.id %}">Edit</a>
             <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
