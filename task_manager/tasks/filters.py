@@ -50,11 +50,17 @@ class TaskFilter(django_filters.FilterSet):
     responsible = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Responsible")
     description = django_filters.CharFilter(lookup_expr='icontains', label="Description")
     labels = django_filters.ModelMultipleChoiceFilter(queryset=Label.objects.all(), label="Labels")
-    
+    self_tasks = django_filters.BooleanFilter(method='filter_self_tasks', label="Only my tasks")
+
     class Meta:
         model = Task
-        fields = ['status', 'creator', 'responsible', 'description', 'labels']
-    
+        fields = ['status', 'creator', 'responsible', 'description', 'labels', 'self_tasks']
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
+
     def filter_self_tasks(self, queryset, name, value):
         if value:  # if checkbox is checked
             return queryset.filter(creator=self.request.user)
