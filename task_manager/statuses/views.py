@@ -14,10 +14,6 @@ class StatusPageView(StatusFormMixin, ListView):
         'table_headers': ['ID', 'Status', 'Actions'],
         'form_action': 'status_create',
     }
-    '''
-    def get_queryset(self):
-        return Status.objects.all()
-    '''
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
     # template_name = 'create.html'

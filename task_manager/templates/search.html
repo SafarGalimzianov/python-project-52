@@ -26,7 +26,7 @@
           <td>{{ task.status }}</td>
           <td>
             {% for label in task.labels.all %}
-              {{ label.label }}{% if not forloop.last %}, {% endif %}
+              {{ label }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </td>
           <td>{{ task.creator.username|default:"-" }}</td>

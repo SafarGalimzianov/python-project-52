@@ -21,22 +21,24 @@
                 Each label has 2 fields: id and label = label.id and label.label
                 {% endcomment %}
                 {% for label in content.labels.all %}
-                    {{ label.label }}{% if not forloop.last %}, {% endif %}
+                    {{ label }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>
             <td>{{ content.creator.username }}</td>
             <td>{{ content.responsible.username|default:'-' }}</td>
             <td>{{ content.description|truncatechars:50 }}</td>
             <td>
-                {% if request.user == content.creator %}
-                    <a href="{% url 'task_update' content.id %}">Edit</a>
+                {% comment %}{% if request.user == content.creator %}{% endcomment %}
+                    <a href="{% url 'task_update' content.id %}">Изменить</a>
+                    <a href="{% url 'task_delete' content.id %}">Удалить</a>
+                    {% comment %}{}
                     <form method="post" action="{% url 'task_delete' content.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-link"
-                            onclick="return confirm('Are you sure you want to delete this task?');">Delete
+                            onclick="return confirm('Are you sure you want to delete this task?');">Удалить
                         </button>
                     </form>
-                {% endif %}
+                    {% endcomment %}
             </td>
         </tr>
     {% endfor %}
