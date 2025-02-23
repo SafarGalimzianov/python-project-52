@@ -73,10 +73,20 @@
                     {{ label }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
                 </td>
-                <td>{{ task.creator.username|default:"-" }}</td>
+                <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
                 <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
                 <td>{{ task.executor.username|default:"-" }}</td>
                 <td>{{ task.description }}</td>
+                <td>
+                  <a href="{% url 'task_update' task.id %}">Изменить</a>
+                  <a href="{% url 'task_delete' task.id %}">Удалить</a>
+                  {% comment %}
+                  <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Delete this status?');">Удалить</button>
+                  </form>
+                  {% endcomment %}
+                </td>
               </tr>
               {% empty %}
               <tr>
@@ -90,47 +100,8 @@
           <p>No tasks available.</p>
         {% endif %}
       </div>
-    
-    
-  <h1>Task Page</h1>
   <a class="btn btn-primary mb-3" href="/tasks/create/">Создать задачу</a>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Status</th>
-        <th>Labels</th>
-        <th>Creator</th>
-        <th>Responsible</th>
-        <th>Description</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for task in table_content %}
-        <tr>
-          <td>{{ task.id }}</td>
-          <td>{{ task.status }}</td>
-          {% for label in task.labels.all %}
-              {{ label }}{% if not forloop.last %}, {% endif %}
-          {% endfor %}
-          <td>{{ task.creator }}</td>
-          <td>{{ task.responsible }}</td>
-          <td>{{ task.description }}</td>
-          <td>
-            <a href="{% url 'task_update' task.id %}">Изменить</a>
-            <a href="{% url 'task_delete' task.id %}">Удалить</a>
-            {% comment %}
-            <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" onclick="return confirm('Delete this status?');">Удалить</button>
-            </form>
-            {% endcomment %}
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+ 
   <footer class="footer py-1 bg-light">
     <div class="container text-center">
       <span>
