@@ -22,7 +22,7 @@
           <label for="id_executor" class="form-label">Исполнитель</label>
           <select class="form-control" id="id_executor" name="executor">
             {% for executor in executors %}
-              <option value="{{ executor.id }}">{{ executor.username }}</option>
+              <option value="{{ executor.id }}">{{ executor.first_name }}</option>
             {% endfor %}
           </select>
         </div>
