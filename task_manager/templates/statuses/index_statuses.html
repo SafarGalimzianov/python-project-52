@@ -1,111 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Task management{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="d-flex flex-column min-vh-100">
-        <div class="container">
-            <ul class="navbar-nav">
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <span class="nav-link">
-                            Logged in as: {{ request.user.username }}
-                        </span>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tasks' %}">Задачи</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'statuses' %}">Статусы</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'labels' %}">Ярлыки</a>
-                </li>
-                {% comment %}Admin panel{% endcomment %}
-                {% if request.user.is_staff %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:index' %}">Admin Panel</a>
-                        </li>
-                {% endif %}
-                {% comment %}
-                This by default makes GET request
-                But Django LogoutView requires POST
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-                {% endcomment %}
-                <li class="nav-item">
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link">Выход</button>
-                    </form>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
-                </li>
-                {% comment %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Задачи</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Статусы</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="alert('Please login to view the content'); return false;">Ярлыки</a>
-                </li>
-                {% endcomment %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Вход</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users_create' %}">Регистрация</a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    {% comment %}
-    flex-grow-N - fill the space in container N times; works only if parent container is flex
-    For example, flex-grow-0 - do not fill, flex-grow-1 if only one such element - fill all available space
-    If there is an element with 1 and also 2, then they divide available space 33% and 66%
-    {% endcomment %}
-    <main class="container flex-grow-1 mt-2">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags|default:'info' }}" role="alert"
-                    {% if message.tags == 'error' %}
-                        style="background-color: orange;"
-                    {% endif %}>
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    
-        {% for content in table_content %}
-        <tr>
-            <td>{{ content.id }}</td>
-            <td>{{ content.status }}</td>
-            <td>
-                <a href="{% url 'status_update' content.id %}">Edit</a>
-                <form method="post" action="{% url 'status_delete' content.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this status?');">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-{% comment %}
 {% extends 'index.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block contents %}
@@ -116,19 +8,19 @@
         {% endfor %}
     </tr>
 </thead>
-
+<tbody>
     {% for content in table_content %}
         <tr>
             <td>{{ content.id }}</td>
             <td>{{ content.status }}</td>
             <td>
-                <a href="{% url 'status_update' content.id %}">Edit</a>
-                <form method="post" action="{% url 'status_delete' content.id %}" style="display:inline;">
+                <a href="{% url 'label_update' content.id %}">Edit</a>
+                <form method="post" action="{% url 'label_delete' content.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this status?');">Delete</button>
+                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure you want to delete this label?');">Delete</button>
                 </form>
             </td>
         </tr>
     {% endfor %}
+</tbody>
 {% endblock %}
-{% endcomment %}
