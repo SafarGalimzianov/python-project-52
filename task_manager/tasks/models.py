@@ -13,7 +13,7 @@ class Task(models.Model):
         blank=True,
         related_name='created_tasks'
     )
-    responsible = models.ForeignKey(
+    executor = models.ForeignKey(
         'auth.User',
         on_delete=models.SET_NULL,
         null=True,
