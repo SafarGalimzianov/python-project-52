@@ -21,39 +21,101 @@
         {% block search %}{% endblock %}
         {% block main %}{% endblock %}
     </main>
+    
     <div class="container">
-      <div class="row w-100">
-        <a class="col nav-link" href="{% url 'home' %}">Home</a>
-        <a class="col nav-link" href="{% url 'users' %}">Пользователи</a>
-        <a class="col nav-link" href="{% url 'tasks' %}">Задачи</a>
-        <a class="col nav-link" href="{% url 'statuses' %}">Статусы</a>
-        <a class="col nav-link" href="{% url 'labels' %}">Ярлыки</a>
-        {% if request.user.is_authenticated %}
-        <a class="col nav-link" href="{% url 'logout' %}">Выход</a>
+        <div class="row w-100">
+          <a class="col nav-link" href="{% url 'home' %}">Home</a>
+          <a class="col nav-link" href="{% url 'users' %}">Пользователи</a>
+          <a class="col nav-link" href="{% url 'tasks' %}">Задачи</a>
+          <a class="col nav-link" href="{% url 'statuses' %}">Статусы</a>
+          <a class="col nav-link" href="{% url 'labels' %}">Ярлыки</a>
+          {% if request.user.is_authenticated %}
+          <a class="col nav-link" href="{% url 'logout' %}">Выход</a>
+          {% else %}
+          <a class="col nav-link" href="{% url 'login' %}">Вход</a>
+          <a class="col nav-link" href="{% url 'users_create' %}">Регистрация</a>
+          {% endif %}
+        </div>
+      </div>
+
+      
+    <div class="container mt-4">
+        <form method="get" class="mb-4">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search tasks..." value="{{ request.GET.q }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </form>
+      
+        {% if tasks %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Labels</th>
+                <th>Creator</th>
+                <th>Responsible</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task in tasks %}
+              <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.status }}</td>
+                <td>
+                  {% for label in task.labels.all %}
+                    {{ label }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td>{{ task.creator.username|default:"-" }}</td>
+                <td>{{ task.responsible.username|default:"-" }}</td>
+                <td>{{ task.description }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6">No tasks found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
         {% else %}
-        <a class="col nav-link" href="{% url 'login' %}">Вход</a>
-        <a class="col nav-link" href="{% url 'users_create' %}">Регистрация</a>
+          <p>No tasks available.</p>
         {% endif %}
       </div>
-    </div>
-  <h1>Status Page</h1>
-  <a class="btn btn-primary mb-3" href="/statuses/create/">Создать статус</a>
+    
+    
+  <h1>Task Page</h1>
+  <a class="btn btn-primary mb-3" href="/tasks/create/">Создать задачу</a>
   <table class="table">
     <thead>
       <tr>
         <th>ID</th>
         <th>Status</th>
+        <th>Labels</th>
+        <th>Creator</th>
+        <th>Responsible</th>
+        <th>Description</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for status in table_content %}
+      {% for task in table_content %}
         <tr>
-          <td>{{ status.id }}</td>
-          <td>{{ status.name }}</td>
+          <td>{{ task.id }}</td>
+          <td>{{ task.status }}</td>
+          {% for label in task.labels.all %}
+              {{ label }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+          <td>{{ task.creator }}</td>
+          <td>{{ task.responsible }}</td>
+          <td>{{ task.description }}</td>
           <td>
-            <a href="{% url 'status_update' status.id %}">Изменить</a>
-            <a href="{% url 'status_delete' status.id %}">Удалить</a>
+            <a href="{% url 'task_update' task.id %}">Изменить</a>
+            <a href="{% url 'task_delete' task.id %}">Удалить</a>
             {% comment %}
             <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
               {% csrf_token %}
