@@ -17,7 +17,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     context_extra = {
         'title': 'Tasks',
         'table_headers': ['ID', 'Name', 'Status', 'Labels', 'Creator', 
-                         'Responsible', 'Description', 'Actions'],
+                         'Executors', 'Description', 'Actions'],
         'form_action': 'task_create',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
@@ -30,12 +30,12 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     context_extra = {
         'title': 'Tasks',
         'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
-                         'Responsible', 'Description', 'Actions'],
+                         'Executors', 'Description', 'Actions'],
         'form_action': 'task_create',
         'button': 'Создать задачу',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
-        'responsibles': User.objects.all(),
+        'executors': User.objects.all(),
     }
 
     def form_invalid(self, form):

@@ -27,10 +27,10 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="id_responsible" class="form-label">Исполнитель</label>
-          <select class="form-control" id="id_responsible" name="responsible">
-            {% for user in responsibles %}
-              <option value="{{ user.id }}">{{ user.username }}</option>
+          <label for="id_executor" class="form-label">Исполнитель</label>
+          <select class="form-control" id="id_executor" name="executor">
+            {% for executor in executors %}
+              <option value="{{ executor.id }}">{{ executor.username }}</option>
             {% endfor %}
           </select>
         </div>
