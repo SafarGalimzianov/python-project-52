@@ -62,6 +62,8 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
 
 class StatusDeletePageView(DeleteView):
     model = Status
+    ''' 
+    template_name = 'statuses/delete_statuses.html'
     success_url = reverse_lazy('statuses')
 
     def post(self, request, *args, **kwargs):
@@ -71,3 +73,30 @@ class StatusDeletePageView(DeleteView):
             return redirect('statuses')
         messages.success(self.request, f'{self.object.status} deleted successfully')
         return super().delete(request, *args, **kwargs)
+    '''    
+
+    template_name = 'delete.html'
+    success_url = reverse_lazy('statuses')
+    context_extra = {
+        'header': 'Statuses',
+        'fields_names': ['ID', 'name'],
+    }
+
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Статус успешно удален', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
+
+'''
+class UserDeletePageView(DeleteView):
+    model = DjangoUser
+    template_name = 'delete.html'
+    success_url = reverse_lazy('users')
+    context_extra = {
+        'header': 'Users',
+        'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
+    }
+
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
+'''

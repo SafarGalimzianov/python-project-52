@@ -53,10 +53,13 @@
           <td>{{ status.name }}</td>
           <td>
             <a href="{% url 'status_update' status.id %}">Изменить</a>
+            <a href="{% url 'status_delete' status.id %}">Удалить</a>
+            {% comment %}
             <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
               {% csrf_token %}
               <button type="submit" onclick="return confirm('Delete this status?');">Удалить</button>
             </form>
+            {% endcomment %}
           </td>
         </tr>
       {% endfor %}
