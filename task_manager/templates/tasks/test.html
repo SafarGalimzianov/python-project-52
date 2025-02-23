@@ -57,7 +57,8 @@
                 <th>Status</th>
                 <th>Labels</th>
                 <th>Creator</th>
-                <th>Responsible</th>
+                <th>Full name</th>
+                <th>Executor</th>
                 <th>Description</th>
               </tr>
             </thead>
@@ -65,6 +66,7 @@
               {% for task in tasks %}
               <tr>
                 <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
                 <td>{{ task.status }}</td>
                 <td>
                   {% for label in task.labels.all %}
@@ -72,7 +74,8 @@
                   {% endfor %}
                 </td>
                 <td>{{ task.creator.username|default:"-" }}</td>
-                <td>{{ task.responsible.username|default:"-" }}</td>
+                <td>{{ task.executors.first_name }} {{ task.executors.last_name }}</td>
+                <td>{{ task.executors.username|default:"-" }}</td>
                 <td>{{ task.description }}</td>
               </tr>
               {% empty %}

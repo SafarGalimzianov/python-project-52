@@ -21,7 +21,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
         'form_action': 'task_create',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
-        'responsibles': User.objects.all(),
+        'executors': User.objects.all(),
     }
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
