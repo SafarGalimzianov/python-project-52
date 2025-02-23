@@ -33,7 +33,7 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="id_labels" class="form-label">Ярлык</label>
+          <label for="id_labels" class="form-label">Метки</label>
           <select class="form-control" id="id_labels" name="labels" multiple>
             {% for label in labels %}
               <option value="{{ label.id }}">{{ label.name }}</option>
