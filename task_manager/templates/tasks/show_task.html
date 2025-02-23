@@ -23,16 +23,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Creator</th>
-                        <td>{{ task.creator.username }}</td>
+                        <th>Автор</th>
+                        <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
                     </tr>
                     <tr>
-                        <th>Executor</th>
+                        <th>Исполнительн</th>
                         <td>{{ task.executor.username|default:'-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Full name</th>
-                        <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
                     </tr>
                     <tr>
                         <th>Description</th>
