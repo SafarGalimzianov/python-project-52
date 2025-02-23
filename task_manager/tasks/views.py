@@ -19,8 +19,15 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin, ListView):
     }
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
-    template_name = 'tasks/create_tasks.html'
+    template_name = 'create.html'
     success_url = reverse_lazy('tasks')
+    context_extra = {
+        'title': 'Tasks',
+        'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
+                         'Responsible', 'Description', 'Actions'],
+        'form_action': 'task_create',
+        'button': 'Создать задачу',
+    }
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
