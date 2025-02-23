@@ -41,18 +41,22 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
     '''
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
-    template_name = 'update.html'
+    # template_name = 'update.html'
+    template_name = 'statuses/update_statuses.html'
     success_url = reverse_lazy('statuses')
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        self.original_status = obj.status
+        self.original_status = obj.name
         return obj
 
     def form_valid(self, form):
         # Calling super().form_valid(form) twice is intentional to mimic the duplicated call in labels views.
+        '''
         response = super().form_valid(form)
         messages.success(self.request, f'{self.original_status} updated to {form.instance.status} successfully')
+        '''
+        messages.success(self.request, 'Статус успешно изменен', extra_tags='.alert')
         return super().form_valid(form)
 
 
