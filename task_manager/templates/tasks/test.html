@@ -46,82 +46,98 @@
               <select name="status" class="form-select" id="id_status">
                 <option value="">---------</option>
                 {% for status in statuses %}
-                  <option value="{{ status.id }}" {% if request.GET.status == status.id|stringformat:"s" %}selected{% endif %}>{{ status.name }}</option>
+                  <option value="{{ status.id }}">{{ status.name }}</option>
                 {% endfor %}
               </select>
             </div>
             
             <div class="mb-3">
-              <label class="form-label" for="id_responsible">Исполнитель</label>
-              <select name="responsible" class="form-select" id="id_responsible">
+              <label class="form-label" for="id_executor">Исполнитель</label>
+              <select name="executor" class="form-select" id="id_executor">
                 <option value="">---------</option>
                 {% for executor in executors %}
-                  <option value="{{ executor.id }}" {% if request.GET.responsible == executor.id|stringformat:"s" %}selected{% endif %}>{{ executor.first_name }} {{ executor.last_name }}</option>
+                  <option value="{{ executor.id }}">{{ executor.first_name }} {{ executor.last_name }}</option>
                 {% endfor %}
               </select>
             </div>
             
             <div class="mb-3">
-              <label class="form-label" for="id_labels">Метка</label>
-              <select name="labels" class="form-select" id="id_labels" multiple>
+              <label class="form-label" for="id_label">Метка</label>
+              <select name="label" class="form-select" id="id_label">
                 <option value="">---------</option>
                 {% for label in labels %}
-                  <option value="{{ label.id }}" {% if label.id|stringformat:"s" in request.GET.labels %}selected{% endif %}>{{ label.name }}</option>
+                  <option value="{{ label.id }}">{{ label.name }}</option>
                 {% endfor %}
               </select>
             </div>
-            
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="id_self_tasks" name="self_tasks" value="1" {% if request.GET.self_tasks %}checked{% endif %}>
               <label class="form-check-label" for="id_self_tasks">Только мои задачи</label>
             </div>
-            
             <input class="btn btn-primary" type="submit" value="Показать">
           </form>
         </div>
       </div>
       
-      {% if object_list %}
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Labels</th>
-              <th>Creator</th>
-              <th>Executor</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for task in object_list %}
-            <tr>
-              <td>{{ task.id }}</td>
-              <td><a href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>
-              <td>{{ task.status }}</td>
-              <td>
-                {% for label in task.labels.all %}
-                  {{ label }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </td>
-              <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
-              <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
-              <td>{{ task.description }}</td>
-              <td>
-                <a href="{% url 'task_update' task.id %}">Изменить</a>
-                <a href="{% url 'task_delete' task.id %}">Удалить</a>
-              </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="7">No tasks found.</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        {% if tasks %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Labels</th>
+                <th>Creator</th>
+                <th>Executor</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task in tasks %}
+              <tr>
+                <td>{{ task.id }}</td>
+                <td><a href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>
+                <td>{{ task.status }}</td>
+                <td>
+                  {% for label in task.labels.all %}
+                    {{ label }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
+                <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                  <a href="{% url 'task_update' task.id %}">Изменить</a>
+                  <a href="{% url 'task_delete' task.id %}">Удалить</a>
+                  {% comment %}
+                  <form method="post" action="{% url 'status_delete' status.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Delete this status?');">Удалить</button>
+                  </form>
+                  {% endcomment %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6">No tasks found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+          <p>No tasks available.</p>
+        {% endif %}
       </div>
-      {% else %}
-        <p>No tasks available.</p>
-      {% endif %}
+  <a class="btn btn-primary mb-3" href="/tasks/create/">Создать задачу</a>
+ 
+  <footer class="footer py-1 bg-light">
+    <div class="container text-center">
+      <span>
+        <a href="https://hexlet.io">Hexlet</a> Project 4, 2025. <a href="https://github.com/SafarGalimzianov/">Safar Galimzianov</a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>
