@@ -27,7 +27,7 @@
           <select class="form-control" id="id_executor" name="executor">
             {% for executor in executors %}
               <option value="{{ executor.id }}" {% if executor.id == request.user.id %}selected{% endif %}>
-                {{ executor.username }}
+                {{ executor.first_name }} {{ executor.last_name }}
               </option>
             {% endfor %}
           </select>
