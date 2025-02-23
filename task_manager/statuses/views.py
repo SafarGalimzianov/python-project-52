@@ -34,6 +34,10 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
             for error in errors:
                 messages.error(self.request, f"Error in {field}: {error}")
         return redirect('statuses')
+    
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Статус успешно создан', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
