@@ -27,8 +27,8 @@
                         <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
                     </tr>
                     <tr>
-                        <th>Исполнительн</th>
-                        <td>{{ task.executor.username|default:'-' }}</td>
+                        <th>Исполнитель</th>
+                        <td>{{ task.executor.first_name }} {{ task.executor.last_name }} </td>
                     </tr>
                     <tr>
                         <th>Description</th>
