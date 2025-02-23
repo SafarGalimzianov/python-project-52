@@ -62,7 +62,7 @@ class LabelDeletePageView(DeleteView):
     }
 
     def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Vtnrf успешно удаленf', extra_tags='.alert')
+        messages.success(self.request, 'Метка успешно удалена', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
 
     '''
