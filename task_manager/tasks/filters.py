@@ -35,12 +35,12 @@ In summary, the filters provide a way to narrow down the Task objects based on s
 '''
 
 import django_filters
-from django_filters import BooleanFilter
 from django.db.models import Q
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from django.contrib.auth import get_user_model
+from django.forms import CheckboxInput
 
 User = get_user_model()
 
@@ -50,13 +50,17 @@ class TaskFilter(django_filters.FilterSet):
     executor = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label='Executor')
     description = django_filters.CharFilter(lookup_expr='icontains', label='Description')
     labels = django_filters.ModelMultipleChoiceFilter(queryset=Label.objects.all(), label='Labels')
-    self_tasks = BooleanFilter(method='filter_by_self_tasks', label='Only my tasks')
+    self_tasks = django_filters.BooleanFilter(method='filter_by_self_tasks', label='Only my tasks')
+    # self_tasks = BooleanFilter(method='filter_by_self_tasks', label='Only my tasks', widget=CheckboxInput)
+    # self_tasks = django_filters.CharFilter(method='filter_by_self_tasks', label='Only my tasks')
 
     class Meta:
         model = Task
         fields = ['status', 'creator', 'executor', 'description', 'labels', 'self_tasks']
 
     def filter_by_self_tasks(self, queryset, name, value):
+        print('CHICKEN')
+        print(f"filter_by_self_tasks called: value={value}, user={self.request.user if self.request else 'No request'}")
         if value:
             return queryset.filter(creator=self.request.user)
         return queryset
