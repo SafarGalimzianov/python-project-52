@@ -47,7 +47,7 @@ User = get_user_model()
 class TaskFilter(django_filters.FilterSet):
     status = django_filters.ModelChoiceFilter(queryset=Status.objects.all(), label="Status")
     creator = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Creator")
-    responsible = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Responsible")
+    executor = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label="Responsible")
     description = django_filters.CharFilter(lookup_expr='icontains', label="Description")
     labels = django_filters.ModelMultipleChoiceFilter(queryset=Label.objects.all(), label="Labels")
     self_tasks = BooleanFilter(method='filter_by_self_tasks', label="Only my tasks")
