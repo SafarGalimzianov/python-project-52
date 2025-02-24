@@ -39,15 +39,40 @@ LOGGING = {
             "formatter": "verbose",
             "delay": True, # The file is not opened or created before receiving logs
         },
+        "console": {  # Add this handler
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": "DEBUG",
             "propagate": True,
         },
+        "": {  # Root logger to catch all other logs (e.g., our custom ones)
+            "handlers": ["file", "console"],
+            "level": "DEBUG",
+        },
     },
 }
+
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+'''
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/

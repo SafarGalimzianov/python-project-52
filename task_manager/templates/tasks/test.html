@@ -63,7 +63,7 @@
             
             <div class="mb-3">
               <label class="form-label" for="id_label">Метка</label>
-              <select name="label" multiple class="form-select" id="id_label">
+              <select name="labels" multiple class="form-select" id="id_label">
                 <option value="">---------</option>
                 {% for label in labels %}
                   <option value="{{ label.id }}">{{ label.name }}</option>
@@ -79,7 +79,7 @@
         </div>
       </div>
       
-        {% if tasks %}
+        {% if filter.qs %}
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -94,7 +94,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for task in tasks %}
+              {% for task in filter.qs %}
               <tr>
                 <td>{{ task.id }}</td>
                 <td><a href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>

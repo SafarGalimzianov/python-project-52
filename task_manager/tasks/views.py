@@ -10,6 +10,9 @@ from task_manager.tasks.filters import TaskFilter
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from task_manager.users.models import User
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     template_name = 'tasks/test.html'
@@ -23,6 +26,11 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
         'labels': Label.objects.all(),
         'executors': User.objects.all(),
     }
+
+    def get(self, request, *args, **kwargs):
+        logger.info(f"\n\n\nGET params: {request.GET}")
+        return super().get(request, *args, **kwargs)
+
 
 class TaskShowPageView(LoginRequiredMixin, DetailView):
     model = Task
