@@ -57,9 +57,8 @@ class TaskFilter(django_filters.FilterSet):
         fields = ['status', 'creator', 'executor', 'description', 'labels']
 
     def filter_by_self_tasks(self, queryset, name, value):
-        # AND
-        return queryset.filter(description__icontains=value, labels__label__icontains=value)
-        # OR
-        return queryset.filter(
-            Q(description__icontains=value) | Q(labels__label__icontains=value)
-        ).distinct()
+        if value:
+            current_user = self.request.user
+            if current_user.is_authenticated:
+                return queryset.filter(creator__username__icontains=current_user.username)
+        return queryset
