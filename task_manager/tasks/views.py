@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView, DetailView
+from django.views.generic import UpdateView, DeleteView, CreateView, DetailView
 from django.urls import reverse_lazy
 from django_filters.views import FilterView
 from task_manager.tasks.models import Task
