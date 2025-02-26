@@ -28,8 +28,15 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     }
 
     def get(self, request, *args, **kwargs):
-        logger.info(f"\n\n\nGET params: {request.GET}")
+        logger.info(f"\nGET params: {request.GET}")
         return super().get(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filterset = self.filterset_class(self.request.GET, queryset=queryset, request=self.request)
+        filtered_qs = filterset.qs
+        logger.info(f"Applied filters - status: {self.request.GET.get('status')}, labels: {self.request.GET.get('labels')}, count: {filtered_qs.count()}")
+        return filtered_qs
 
 
 class TaskShowPageView(LoginRequiredMixin, DetailView):

@@ -57,7 +57,7 @@ class TaskFilter(django_filters.FilterSet):
     labels = django_filters.ModelChoiceFilter(
         queryset=Label.objects.all(),
         label='Label',
-        method='filter_by_label'
+        method='filter_by_labels'
     )
     self_tasks = django_filters.BooleanFilter(
         method='filter_by_self_tasks',
@@ -72,13 +72,15 @@ class TaskFilter(django_filters.FilterSet):
     def filter_by_self_tasks(self, queryset, name, value):
         logger.info(f"Self tasks filter called: value={value}, user={self.request.user if self.request else 'No request'}")
         if value:
-            return queryset.filter(creator=self.request.user)
+            filtered_qs = queryset.filter(creator=self.request.user)
+            logger.info(f"Self tasks filtered count: {filtered_qs.count()}")
+            return filtered_qs
         return queryset
 
-    def filter_by_label(self, queryset, name, value):
-        logger.info(f"Label filter called: value={value}")
+    def filter_by_labels(self, queryset, name, value):
+        logger.info(f"Labels filter called: value={value}")
         if value:
-            filtered_queryset = queryset.filter(labels=value)
-            logger.info(f"Filtered queryset count: {filtered_queryset.count()}")
-            return filtered_queryset
+            filtered_qs = queryset.filter(labels=value)
+            logger.info(f"Labels filtered count: {filtered_qs.count()}")
+            return filtered_qs
         return queryset
