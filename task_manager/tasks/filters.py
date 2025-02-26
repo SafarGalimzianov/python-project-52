@@ -48,7 +48,6 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-
 class TaskFilter(django_filters.FilterSet):
     status = django_filters.ModelChoiceFilter(queryset=Status.objects.all(), label='Status')
     creator = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label='Creator')
