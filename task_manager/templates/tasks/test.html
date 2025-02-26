@@ -62,8 +62,8 @@
             </div>
             
             <div class="mb-3">
-              <label class="form-label" for="id_label">Метка</label>
-              <select name="labels" multiple class="form-select" id="id_label">
+              <label class="form-label" for="id_labels">Метка</label>
+              <select name="labels" multiple class="form-select" id="id_labels">
                 {% for label in labels %}
                   <option value="{{ label.id }}">{{ label.name }}</option>
                 {% endfor %}
