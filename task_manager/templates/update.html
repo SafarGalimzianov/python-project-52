@@ -9,7 +9,15 @@
             {% csrf_token %}
             {% for field in form %}
             <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}" class="form-label">
+                    {% if field.name == "name" %}Имя
+                    {% elif field.name == "status" %}Статус
+                    {% elif field.name == "labels" %}Метки
+                    {% elif field.name == "creator" %}Создатель
+                    {% elif field.name == "executor" %}Исполнитель
+                    {% elif field.name == "description" %}Описание
+                    {% else %}{{ field.label }}{% endif %}
+                </label>
                 {{ field|add_class:'form-control' }}
                 {% if field.errors %}
                 <div class="invalid-feedback d-block">
