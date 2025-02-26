@@ -72,7 +72,7 @@ class TaskFilter(django_filters.FilterSet):
     def filter_by_self_tasks(self, queryset, name, value):
         logger.info(f"\nSelf tasks filter called: value={value}, user={self.request.user if self.request else 'No request'}")
         if value:
-            return queryset.filter(creator=self.request.user)
+            return queryset.filter(executor=self.request.user)
         return queryset
 
     def filter_by_label(self, queryset, name, value):
