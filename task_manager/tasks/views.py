@@ -75,6 +75,7 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         if not self.request.user.is_staff:
             form.instance.responsible = self.request.user
         '''
+        logger.info(f'[TASKCREATEPAGEVIEW FORM_VALID] Creating task when logged in as {self.request.user}')
         messages.success(self.request, 'Задача успешно создана')
         return super().form_valid(form)
 
