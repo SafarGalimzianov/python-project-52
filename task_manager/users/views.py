@@ -130,12 +130,10 @@ class UserDeletePageView(DeleteView):
         # You'll need to determine which users should be deleted immediately
         # This is an example - adjust the condition based on your test data
         if user_to_delete.id == request.user.id:
-            logger.info(f'[GET METHOD]Trying to delete user {user_to_delete} when logged in as {self.request.user.id}')
             ...
             # return self.post(request, *args, **kwargs)
         
         # For other users, show the confirmation page (first test)
-        logger.info(f'[GET METHOD]Trying to delete user {user_to_delete} when logged in as {self.request.user.id}')
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
