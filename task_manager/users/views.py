@@ -26,8 +26,8 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        logger.info(f'User {form.fields.items()} created by {self.request.user}')
         messages.success(self.request, 'Вы залогинены', extra_tags='.alert')
-        logger.info(f'User {form.username} created by {self.request.user}')
         return response
 
     def form_invalid(self, form):
