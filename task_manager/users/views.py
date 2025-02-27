@@ -139,7 +139,7 @@ class UserDeletePageView(DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
-        logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {self.request.user.id}')
+        logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {request.user.id}')
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
@@ -148,6 +148,6 @@ class UserDeletePageView(DeleteView):
         # This gets called for both GET and POST requests
         # For GET requests that show the confirmation page, this message isn't appropriate yet
         # Move this to the post method instead
-        logger.info(f'[DISPATCH METHOD]Deleting user {self.object} when logged in as {self.request.user.id}')
+        logger.info(f'[DISPATCH METHOD]Deleting user {self.object} when logged in as {request.user.id}')
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
