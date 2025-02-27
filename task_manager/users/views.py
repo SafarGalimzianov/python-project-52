@@ -116,7 +116,7 @@ class UserDeletePageView(DeleteView):
         'header': 'Users',
         'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
     }
-
+    '''
     def get(self, request, *args, **kwargs):
         # Override GET to handle deletion without showing the confirmation template
         # Simply said, delete on same page
@@ -128,7 +128,7 @@ class UserDeletePageView(DeleteView):
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
-
+    '''
     def dispatch(self, request, *args, **kwargs):
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
