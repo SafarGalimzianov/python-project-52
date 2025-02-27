@@ -27,7 +27,7 @@ class UserLoginView(LoginView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, 'Вы залогинены', extra_tags='.alert')
-        logger.info(f'Currently logged in as {self.request.user.id}')
+        logger.info(f'Currently logged in as {self.request.user}')
         return response
 
     def form_invalid(self, form):
@@ -81,7 +81,7 @@ class UserCreatePageView(UserFormMixin, CreateView):
     success_url = reverse_lazy('login')
 
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f'Creating user when logged in as {self.request.user.id}')
+        logger.info(f'Creating user when logged in as {request.user}')
         messages.success(self.request, 'Пользователь успешно зарегистрирован', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
 
@@ -101,7 +101,7 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
         if not request.user.is_staff:
             return redirect('users')
         """
-        logger.info(f'Updating user when logged in as {self.request.user.id}')
+        logger.info(f'Updating user when logged in as {request.user}')
         messages.success(self.request, 'Пользователь успешно изменен', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
     
@@ -139,7 +139,7 @@ class UserDeletePageView(DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
-        logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {request.user.id}')
+        logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {request.user}')
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
@@ -148,6 +148,6 @@ class UserDeletePageView(DeleteView):
         # This gets called for both GET and POST requests
         # For GET requests that show the confirmation page, this message isn't appropriate yet
         # Move this to the post method instead
-        logger.info(f'[DISPATCH METHOD]Deleting user {self.get_object()} when logged in as {request.user.id}')
+        logger.info(f'[DISPATCH METHOD]Deleting user {self.get_object()} when logged in as {request.user}')
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
