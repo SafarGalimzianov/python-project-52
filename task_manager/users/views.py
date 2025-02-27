@@ -8,6 +8,9 @@ from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserLoginView(LoginView):
@@ -24,6 +27,7 @@ class UserLoginView(LoginView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, 'Вы залогинены', extra_tags='.alert')
+        logger.info(f'Currently logged in as {self.request.user.id}')
         return response
 
     def form_invalid(self, form):
@@ -40,7 +44,6 @@ class UserLoginView(LoginView):
             messages.error(self.request, flash_messages['something_wrong'], extra_tags='warning')
 
         return super().form_invalid(form)
-    
     next_page = reverse_lazy('home')
 
 
@@ -78,6 +81,7 @@ class UserCreatePageView(UserFormMixin, CreateView):
     success_url = reverse_lazy('login')
 
     def dispatch(self, request, *args, **kwargs):
+        logger.info(f'Creating user when logged in as {self.request.user.id}')
         messages.success(self.request, 'Пользователь успешно зарегистрирован', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
 
@@ -97,10 +101,12 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
         if not request.user.is_staff:
             return redirect('users')
         """
+        logger.info(f'Updating user when logged in as {self.request.user.id}')
         messages.success(self.request, 'Пользователь успешно изменен', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
     
     def form_invalid(self, form):
+        logger.info(f'Updating user when logged in as {self.request.user.id}')
         if form.errors.get('username'):
             messages.error(self.request, 'Please use a different username', extra_tags='warning')
         if form.non_field_errors():
@@ -124,15 +130,18 @@ class UserDeletePageView(DeleteView):
         # You'll need to determine which users should be deleted immediately
         # This is an example - adjust the condition based on your test data
         if user_to_delete.id == request.user.id:
+            logger.info(f'[GET METHOD]Trying to delete user {self.request.user.id} when logged in as {self.request.user.id}')
             ...
             # return self.post(request, *args, **kwargs)
         
         # For other users, show the confirmation page (first test)
+        logger.info(f'[GET METHOD]Trying to delete user {self.request.user.id} when logged in as {self.request.user.id}')
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
+        logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {self.request.user.id}')
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
@@ -141,5 +150,6 @@ class UserDeletePageView(DeleteView):
         # This gets called for both GET and POST requests
         # For GET requests that show the confirmation page, this message isn't appropriate yet
         # Move this to the post method instead
+        logger.info(f'[DISPATCH METHOD]Deleting user {self.object} when logged in as {self.request.user.id}')
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
