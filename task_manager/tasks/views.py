@@ -67,7 +67,7 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error in {field}: {error}")
-        return redirect('tasks/create')
+        return redirect('task_create')
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
