@@ -124,7 +124,8 @@ class UserDeletePageView(DeleteView):
         # You'll need to determine which users should be deleted immediately
         # This is an example - adjust the condition based on your test data
         if user_to_delete.id == request.user.id:
-            return self.post(request, *args, **kwargs)
+            ...
+            # return self.post(request, *args, **kwargs)
         
         # For other users, show the confirmation page (first test)
         return super().get(request, *args, **kwargs)
