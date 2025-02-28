@@ -151,7 +151,6 @@ class UserDeletePageView(DeleteView):
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
         '''
-    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
 
