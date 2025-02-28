@@ -152,7 +152,6 @@ class UserDeletePageView(DeleteView):
         return redirect(success_url)
         '''
         user_to_delete = self.get_object()
-        success_url = self.get_success_url()
 
         # Check if the user is associated with any tasks
         has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
@@ -165,14 +164,14 @@ class UserDeletePageView(DeleteView):
                 "Нельзя удалить пользователя, так как он связан с задачами",
                 extra_tags='warning'
             )
-            return redirect(success_url)
+            return redirect(self.success_url)
         else:
             logger.info(f"CAN delete user {user_to_delete} - NOT associated with tasks") 
         # Proceed with deletion if no tasks are associated
         logger.info(f'[POST METHOD] Deleting user {user_to_delete} when logged in as {request.user}')
         user_to_delete.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
-        return redirect(success_url) 
+        return redirect(self.success_url) 
     
     def dispatch(self, request, *args, **kwargs):
         # This gets called for both GET and POST requests
