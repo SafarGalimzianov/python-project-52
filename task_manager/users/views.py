@@ -125,7 +125,7 @@ class UserDeletePageView(DeleteView):
     }
     
     def get(self, request, *args, **kwargs):
-        # user_to_delete = self.get_object()
+        user_to_delete = self.get_object()
         has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
 
