@@ -8,6 +8,7 @@ from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
+from task_manager.tasks.models import Task
 import logging
 
 logger = logging.getLogger(__name__)
