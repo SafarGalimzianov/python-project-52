@@ -143,12 +143,36 @@ class UserDeletePageView(DeleteView):
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
+        '''
         self.object = self.get_object()
         success_url = self.get_success_url()
         logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {request.user}')
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
+        '''
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+
+        # Check if the user is associated with any tasks
+        has_tasks_as_creator = Task.objects.filter(creator=self.object).exists()
+        has_tasks_as_executor = Task.objects.filter(executor=self.object).exists()
+
+        if has_tasks_as_creator or has_tasks_as_executor:
+            logger.info(f"Cannot delete user {self.object} - associated with tasks")
+            messages.error(
+                self.request,
+                "Нельзя удалить пользователя, так как он связан с задачами",
+                extra_tags='warning'
+            )
+            return redirect(success_url)
+        
+        # Proceed with deletion if no tasks are associated
+        logger.info(f'[POST METHOD] Deleting user {self.object} when logged in as {request.user}')
+        self.object.delete()
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        return redirect(success_url) 
     
     def dispatch(self, request, *args, **kwargs):
         # This gets called for both GET and POST requests
