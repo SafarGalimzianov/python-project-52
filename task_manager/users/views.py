@@ -125,7 +125,21 @@ class UserDeletePageView(DeleteView):
     }
     
     def get(self, request, *args, **kwargs):
-        user_to_delete = self.get_object()
+        # user_to_delete = self.get_object()
+        has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
+        has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
+
+        if has_tasks_as_creator or has_tasks_as_executor:
+            logger.info(f"Cannot delete user {user_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                "Нельзя удалить пользователя, так как он связан с задачами",
+                extra_tags='warning'
+            )
+            return redirect(self.success_url)
+
+        # Show confirmation page if no tasks
+        return super().get(request, *args, **kwargs) 
         
         # Check if the user being deleted is the test user from the second test
         # You'll need to determine which users should be deleted immediately
