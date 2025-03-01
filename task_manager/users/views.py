@@ -135,11 +135,13 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         elif request.user != user_to_delete:
+            message = 'У вас нет прав для изменения другого пользователя.'
             messages.error(
                 self.request,
-                'У вас нет прав для изменения другого пользователя.',
+                message,
                 extra_tags='.alert'
             )
+            self.dispatch_message = message
             return redirect(self.success_url)
         else:
             logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
