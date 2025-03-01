@@ -137,7 +137,7 @@ class UserDeletePageView(DeleteView):
         else:
             logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
             # Show confirmation page if no tasks
-            self.delete()
+            messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
             return super().get(request, *args, **kwargs)
 
         '''
@@ -149,3 +149,6 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         '''
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        return super().dispatch(request, *args, **kwargs)
