@@ -98,10 +98,6 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
     }
 
     def dispatch(self, request, *args, **kwargs):
-        """
-        if not request.user.is_staff:
-            return redirect('users')
-        """
         logger.info(f'User {self.get_object()} updated by {self.request.user}')
         messages.success(self.request, 'Пользователь успешно изменен', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
@@ -109,9 +105,9 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
     def form_invalid(self, form):
         logger.info(f'User {self.get_object()} updated by {self.request.user}')
         if form.errors.get('username'):
-            messages.error(self.request, 'Please use a different username', extra_tags='warning')
+            messages.error(self.request, 'Please use a different username', extra_tags='.alert')
         if form.non_field_errors():
-            messages.error(self.request, form.non_field_errors(), extra_tags='warning')
+            messages.error(self.request, form.non_field_errors(), extra_tags='.alert')
         return super().form_invalid(form)
 
 
@@ -133,8 +129,15 @@ class UserDeletePageView(DeleteView):
             logger.info(f"Cannot delete user {user_to_delete} - associated with tasks")
             messages.error(
                 self.request,
-                "Нельзя удалить пользователя, так как он связан с задачами",
-                extra_tags='warning'
+                'Невозможно удалить пользователя, потому что он используется',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        elif request.user is not user_to_delete and not request.user.is_staff:
+            messages.error(
+                self.request,
+                'У вас нет прав для изменения другого пользователя',
+                extra_tags='.alert'
             )
             return redirect(self.success_url)
         else:
