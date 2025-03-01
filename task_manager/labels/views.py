@@ -4,6 +4,10 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from task_manager.labels.models import Label
 from task_manager.labels.mixins import LabelFormMixin
+from task_manager.tasks.models import Task
+import logging
+
+logger = logging.getLogger(__name__)
 
 class LabelPageView(LabelFormMixin, ListView):
     template_name = 'labels/test.html'
@@ -61,16 +65,23 @@ class LabelDeletePageView(DeleteView):
         'fields_names': ['ID', 'name'],
     }
 
-    def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Метка успешно удалена', extra_tags='.alert')
-        return super().dispatch(request, *args, **kwargs)
-
-    '''
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.tasks.exists():
-            messages.error(self.request, "Cannot delete label because it is assigned to a task.")
-            return redirect('labels')
-        messages.success(self.request, f'{self.object.label} deleted successfully')
-        return super().delete(request, *args, **kwargs)
-    '''
+        label_to_delete = self.get_object()
+        has_related_task = label_to_delete.tasks.exists()
+
+        if has_related_task:
+            logger.info(f"{request.user} CANNOT delete label {label_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                'Невозможно удалить метку, потому что она используется',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        
+        response = super().post(request, *args, **kwargs)
+        messages.success(self.request, 'Метка успешно удалена', extra_tags='.alert')
+        return response
+        
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"{request.user} now in labels/ LabelDeletePageView dispatch method")
+        return super().dispatch(request, *args, **kwargs)
