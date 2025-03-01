@@ -8,6 +8,7 @@ from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
+from task_manager.tasks.models import Task
 import logging
 
 logger = logging.getLogger(__name__)
@@ -126,27 +127,52 @@ class UserDeletePageView(DeleteView):
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
         user_to_delete = self.get_object()
-        
-        # Check if the user being deleted is the test user from the second test
-        # You'll need to determine which users should be deleted immediately
-        # This is an example - adjust the condition based on your test data
-        if user_to_delete.id == request.user.id:
-            self.object = user_to_delete
-            self.object.delete()
-            messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
-            return redirect(self.get_success_url())
-            # return self.post(request, *args, **kwargs)
-        
-        # For other users, show the confirmation page (first test)
+        has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
+        has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
+
+        if has_tasks_as_creator or has_tasks_as_executor:
+            logger.info(f"Cannot delete user {user_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                "Нельзя удалить пользователя, так как он связан с задачами",
+                extra_tags='warning'
+            )
+            return redirect(self.success_url)
+        else:
+            logger.info(f"CAN delete user {user_to_delete} - NOT associated with tasks")
+        # Show confirmation page if no tasks
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
+        '''
         self.object = self.get_object()
         success_url = self.get_success_url()
         logger.info(f'[POST METHOD]Deleting user {self.object} when logged in as {request.user}')
         self.object.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return redirect(success_url)
+        '''
+        user_to_delete = self.get_object()
+
+        # Check if the user is associated with any tasks
+        has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
+        has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
+
+        if has_tasks_as_creator or has_tasks_as_executor:
+            logger.info(f"Cannot delete user {user_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                "Нельзя удалить пользователя, так как он связан с задачами",
+                extra_tags='warning'
+            )
+            return redirect(self.success_url)
+        else:
+            logger.info(f"CAN delete user {user_to_delete} - NOT associated with tasks") 
+        # Proceed with deletion if no tasks are associated
+        logger.info(f'[POST METHOD] Deleting user {user_to_delete} when logged in as {request.user}')
+        user_to_delete.delete()
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        return redirect(self.success_url) 
     
     def dispatch(self, request, *args, **kwargs):
         # This gets called for both GET and POST requests
