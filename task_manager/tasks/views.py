@@ -101,13 +101,43 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('tasks')
-
     template_name = 'delete.html'
     context_extra = {
-        'header': 'Statuses',
+        'header': 'Tasks',
         'fields_names': ['ID', 'name'],
     }
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        task = self.get_object()
+        # Check if the current user is the creator of the task
+        if task.creator != request.user:
+            logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
+            messages.error(
+                self.request,
+                'Задачу может удалить только ее автор',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        # If the user is the creator, show the deletion confirmation page
+        return super().get(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        task = self.get_object()
+        # Check again at form submission time to prevent tampering
+        if task.creator != request.user:
+            logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
+            messages.error(
+                self.request,
+                'Задачу может удалить только ее автор',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        
+        response = super().post(request, *args, **kwargs)
         messages.success(self.request, 'Задача успешно удалена', extra_tags='.alert')
-        return super().dispatch(request, *args, **kwargs)
+        return response
+        
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"{request.user} now in tasks/ TaskDeletePageView dispatch method")
+        # Don't add success message here since it would show even if deletion fails
+        return super(DeleteView, self).dispatch(request, *args, **kwargs)
