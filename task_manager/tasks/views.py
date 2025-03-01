@@ -111,9 +111,3 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(self.request, 'Задача успешно удалена', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
-
-    '''
-    def get(self, request, *args, **kwargs):
-        """Override get to handle deletion without template"""
-        return self.delete(request, *args, **kwargs)
-    '''

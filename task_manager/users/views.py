@@ -125,7 +125,6 @@ class UserDeletePageView(DeleteView):
     }
     
     def get(self, request, *args, **kwargs):
-        return self.delete(request, *args, **kwargs)
         user_to_delete = self.get_object()
         has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
@@ -140,8 +139,8 @@ class UserDeletePageView(DeleteView):
             return redirect(self.success_url)
         else:
             logger.info(f"CAN delete user {user_to_delete} - NOT associated with tasks")
-        # Show confirmation page if no tasks
-        return super().get(request, *args, **kwargs)
+            # Show confirmation page if no tasks
+            return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         '''
