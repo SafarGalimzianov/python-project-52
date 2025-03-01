@@ -115,6 +115,7 @@ class UserDeletePageView(DeleteView):
     model = DjangoUser
     template_name = 'delete.html'
     success_url = reverse_lazy('users')
+    dispatch_message = 'Пользователь успешно удален'
     context_extra = {
         'header': 'Users',
         'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
@@ -153,5 +154,5 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)'''
     def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        messages.success(self.request, self.dispatch_message, extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
