@@ -137,6 +137,7 @@ class UserDeletePageView(DeleteView):
         else:
             logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
             # Show confirmation page if no tasks
+            self.delete()
             return super().get(request, *args, **kwargs)
 
         '''
