@@ -3,7 +3,11 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 from task_manager.statuses.mixins import StatusFormMixin
+import logging
+
+logger = logging.getLogger(__name__)
 
 class StatusPageView(StatusFormMixin, ListView):
     # template_name = 'statuses/index_statuses.html'
@@ -58,19 +62,6 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
 
 class StatusDeletePageView(DeleteView):
     model = Status
-    ''' 
-    template_name = 'statuses/delete_statuses.html'
-    success_url = reverse_lazy('statuses')
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.tasks.exists():
-            messages.error(self.request, "Cannot delete status because it is assigned to a task.")
-            return redirect('statuses')
-        messages.success(self.request, f'{self.object.status} deleted successfully')
-        return super().delete(request, *args, **kwargs)
-    '''    
-
     template_name = 'delete.html'
     success_url = reverse_lazy('statuses')
     context_extra = {
@@ -78,21 +69,41 @@ class StatusDeletePageView(DeleteView):
         'fields_names': ['ID', 'name'],
     }
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        status_to_delete = self.get_object()
+        has_related_task = Task.objects.filter(status=status_to_delete).exists()
+
+        if has_related_task:
+            logger.info(f"{request.user} CANNOT delete status {status_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                'Невозможно удалить статус, потому что он используется',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        else:
+            logger.info(f"{request.user} CAN delete status {status_to_delete} - NOT associated with tasks")
+            # Show confirmation page if it's the same user and no tasks
+            return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Check again before actually deleting (to handle race conditions)
+        status_to_delete = self.get_object()
+        has_related_task = Task.objects.filter(status=status_to_delete).exists()
+
+        if has_related_task:
+            logger.info(f"{request.user} CANNOT delete status {status_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                'Невозможно удалить статус, потому что он используется',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        
+        response = super().post(request, *args, **kwargs)
         messages.success(self.request, 'Статус успешно удален', extra_tags='.alert')
-        return super().dispatch(request, *args, **kwargs)
-
-'''
-class UserDeletePageView(DeleteView):
-    model = DjangoUser
-    template_name = 'delete.html'
-    success_url = reverse_lazy('users')
-    context_extra = {
-        'header': 'Users',
-        'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
-    }
+        return response
 
     def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        logger.info(f"{request.user} now in statuses/ StatusDeletePageView dispatch method")
         return super().dispatch(request, *args, **kwargs)
-'''
