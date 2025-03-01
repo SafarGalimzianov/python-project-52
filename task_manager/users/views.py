@@ -133,7 +133,7 @@ class UserDeletePageView(DeleteView):
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
-        elif request.user is not user_to_delete:
+        elif request.user != user_to_delete:
             messages.error(
                 self.request,
                 'У вас нет прав для изменения другого пользователя.',
