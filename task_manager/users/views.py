@@ -126,7 +126,16 @@ class UserDeletePageView(DeleteView):
         has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
 
-        if has_tasks_as_creator or has_tasks_as_executor:
+        if request.user != user_to_delete:
+            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - NOT SAME user")
+            message = 'У вас нет прав для изменения другого пользователя.'
+            messages.error(
+                self.request,
+                message,
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
+        elif has_tasks_as_creator or has_tasks_as_executor:
             logger.info(f"{request.user} CANNOT delete user {user_to_delete} - associated with tasks")
             messages.error(
                 self.request,
@@ -134,28 +143,11 @@ class UserDeletePageView(DeleteView):
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
-        elif request.user != user_to_delete:
-            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - NOT SAME user and NOT staff")
-            message = 'У вас нет прав для изменения другого пользователя.'
-            messages.error(
-                self.request,
-                message,
-                extra_tags='.alert'
-            )
-            self.dispatch_message = message
-            return redirect(self.success_url)
         else:
             logger.info(f"{request.user} CAN delete user {user_to_delete} - SAME user and NOT associated with tasks")
-            # Show confirmation page if no tasks
-            messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+            # Show confirmation page if it's the same user and no tasks
             return super().get(request, *args, **kwargs)
-        '''elif request.user is user_to_delete and not request.user.is_staff:
-            messages.error(
-                self.request,
-                'У вас нет прав для изменения другого пользователя.',
-                extra_tags='.alert'
-            )
-            return redirect(self.success_url)'''
+
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"{request.user} now in users/ UserDeletePageView dispatch method")
         messages.success(self.request, self.dispatch_message, extra_tags='.alert')
