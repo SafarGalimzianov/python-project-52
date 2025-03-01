@@ -126,13 +126,20 @@ class UserDeletePageView(DeleteView):
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
 
         if has_tasks_as_creator or has_tasks_as_executor:
-            logger.info(f"Cannot delete user {user_to_delete} - associated with tasks")
+            logger.info(f"{request.user} Cannot delete user {user_to_delete} - associated with tasks")
             messages.error(
                 self.request,
                 'Невозможно удалить пользователя, потому что он используется',
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
+
+        else:
+            logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
+            # Show confirmation page if no tasks
+            return super().get(request, *args, **kwargs)
+
+        '''
         elif request.user is not user_to_delete:
             messages.error(
                 self.request,
@@ -140,7 +147,4 @@ class UserDeletePageView(DeleteView):
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
-        else:
-            logger.info(f"CAN delete user {user_to_delete} - NOT associated with tasks")
-            # Show confirmation page if no tasks
-            return super().get(request, *args, **kwargs)
+        '''
