@@ -69,25 +69,7 @@ class StatusDeletePageView(DeleteView):
         'fields_names': ['ID', 'name'],
     }
 
-    def get(self, request, *args, **kwargs):
-        status_to_delete = self.get_object()
-        has_related_task = Task.objects.filter(status=status_to_delete).exists()
-
-        if has_related_task:
-            logger.info(f"{request.user} CANNOT delete status {status_to_delete} - associated with tasks")
-            messages.error(
-                self.request,
-                'Невозможно удалить статус, потому что он используется',
-                extra_tags='.alert'
-            )
-            return redirect(self.success_url)
-        else:
-            logger.info(f"{request.user} CAN delete status {status_to_delete} - NOT associated with tasks")
-            # Show confirmation page if it's the same user and no tasks
-            return super().get(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
-        # Check again before actually deleting (to handle race conditions)
         status_to_delete = self.get_object()
         has_related_task = Task.objects.filter(status=status_to_delete).exists()
 
@@ -103,7 +85,7 @@ class StatusDeletePageView(DeleteView):
         response = super().post(request, *args, **kwargs)
         messages.success(self.request, 'Статус успешно удален', extra_tags='.alert')
         return response
-
+        
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"{request.user} now in statuses/ StatusDeletePageView dispatch method")
         return super().dispatch(request, *args, **kwargs)
