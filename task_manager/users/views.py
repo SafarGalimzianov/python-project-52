@@ -124,6 +124,7 @@ class UserDeletePageView(DeleteView):
     }
     
     def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
         user_to_delete = self.get_object()
         
         # Check if the user being deleted is the test user from the second test
