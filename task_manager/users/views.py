@@ -171,10 +171,4 @@ class UserDeletePageView(DeleteView):
         logger.info(f'[POST METHOD] Deleting user {user_to_delete} when logged in as {request.user}')
         user_to_delete.delete()
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
-        return redirect(self.success_url) 
-    
-    def dispatch(self, request, *args, **kwargs):
-        # This gets called for both GET and POST requests
-        # For GET requests that show the confirmation page, this message isn't appropriate yet
-        # Move this to the post method instead
-        return super().dispatch(request, *args, **kwargs)
+        return redirect(self.success_url)
