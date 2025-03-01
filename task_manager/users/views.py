@@ -127,7 +127,7 @@ class UserDeletePageView(DeleteView):
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
 
         if has_tasks_as_creator or has_tasks_as_executor:
-            logger.info(f"{request.user} Cannot delete user {user_to_delete} - associated with tasks")
+            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - associated with tasks")
             messages.error(
                 self.request,
                 'Невозможно удалить пользователя, потому что он используется',
@@ -135,6 +135,7 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         elif request.user != user_to_delete:
+            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - NOT SAME user and NOT staff")
             message = 'У вас нет прав для изменения другого пользователя.'
             messages.error(
                 self.request,
@@ -144,7 +145,7 @@ class UserDeletePageView(DeleteView):
             self.dispatch_message = message
             return redirect(self.success_url)
         else:
-            logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
+            logger.info(f"{request.user} CAN delete user {user_to_delete} - SAME user and NOT associated with tasks")
             # Show confirmation page if no tasks
             messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
             return super().get(request, *args, **kwargs)
@@ -156,5 +157,6 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)'''
     def dispatch(self, request, *args, **kwargs):
+        logger.info(f"{request.user} now in users/ UserDeletePageView dispatch method")
         messages.success(self.request, self.dispatch_message, extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
