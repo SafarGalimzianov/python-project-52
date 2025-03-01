@@ -133,22 +133,25 @@ class UserDeletePageView(DeleteView):
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
-
+        elif request.user is not user_to_delete:
+            messages.error(
+                self.request,
+                'У вас нет прав для изменения другого пользователя.',
+                extra_tags='.alert'
+            )
+            return redirect(self.success_url)
         else:
             logger.info(f"{request.user} CAN delete user {user_to_delete} - NOT associated with tasks")
             # Show confirmation page if no tasks
             messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
             return super().get(request, *args, **kwargs)
-
-        '''
-        elif request.user is not user_to_delete:
+        '''elif request.user is user_to_delete and not request.user.is_staff:
             messages.error(
                 self.request,
-                'У вас нет прав для изменения другого пользователя',
+                'У вас нет прав для изменения другого пользователя.',
                 extra_tags='.alert'
             )
-            return redirect(self.success_url)
-        '''
+            return redirect(self.success_url)'''
     def dispatch(self, request, *args, **kwargs):
         messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
