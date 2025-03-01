@@ -115,7 +115,6 @@ class UserDeletePageView(DeleteView):
     model = DjangoUser
     template_name = 'delete.html'
     success_url = reverse_lazy('users')
-    dispatch_message = 'Пользователь успешно удален'
     context_extra = {
         'header': 'Users',
         'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
@@ -148,7 +147,11 @@ class UserDeletePageView(DeleteView):
             # Show confirmation page if it's the same user and no tasks
             return super().get(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        return response
+        
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"{request.user} now in users/ UserDeletePageView dispatch method")
-        messages.success(self.request, self.dispatch_message, extra_tags='.alert')
         return super().dispatch(request, *args, **kwargs)
