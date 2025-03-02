@@ -28,7 +28,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
             'Labels',
             'Creator', 
             'Executors',
-            'Description',
+            'Descriptionssssssssssssssss',
             'Actions'
         ],
         'form_action': 'task_create',

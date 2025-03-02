@@ -1,8 +1,46 @@
 {% extends 'index.html' %}
 {% load custom_tags %}
 {% block title %}{{ title }}{% endblock %}
-{% block search %}{% include 'search.html' %}{% endblock %}
 {% block contents %}
+<div class="card mb-3">
+    <div class="card-body bg-light">
+      <form class="form-inline center" method="get">
+        <div class="mb-3">
+          <label class="form-label" for="id_status">Статус</label>
+          <select name="status" class="form-select" id="id_status">
+            <option value="">---------</option>
+            {% for status in statuses %}
+              <option value="{{ status.id }}" {% if request.GET.status == status.id|stringformat:"s" %}selected{% endif %}>{{ status.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label" for="id_executor">Исполнитель</label>
+          <select name="executor" class="form-select" id="id_executor">
+            <option value="">---------</option>
+            {% for executor in executors %}
+              <option value="{{ executor.id }}" {% if request.GET.executor == executor.id|stringformat:"s" %}selected{% endif %}>{{ executor.first_name }} {{ executor.last_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label" for="id_labels">Метка</label>
+          <select name="labels" multiple class="form-select" id="id_labels">
+            {% for label in labels %}
+              <option value="{{ label.id }}" {% if request.GET.labels == label.id|stringformat:"s" %}selected{% endif %}>{{ label.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="id_self_tasks" name="self_tasks" value="1"{% if request.GET.self_tasks == "1" %}checked{% endif %}>
+          <label class="form-check-label" for="id_self_tasks">Только свои задачи</label>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Показать">
+      </form>
+    </div>
+  </div>
 {% if filter.qs %}
 <thead>
     <tr>
