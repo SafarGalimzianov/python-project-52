@@ -12,7 +12,7 @@
     {% for content in table_content %}
         <tr>
             <td>{{ content.id }}</td>
-            <td>{{ content.label }}</td>
+            <td>{{ content.name }}</td>
             <td>
                 <a href="{% url 'label_update' content.id %}">Изменить</a>
                 <a href="{% url 'label_delete' content.id %}">Удалить</a>

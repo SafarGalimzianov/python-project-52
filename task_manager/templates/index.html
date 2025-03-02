@@ -2,6 +2,7 @@
 {% load custom_tags %}
 {% block title %}List{% endblock %}
 {% block main %}
+{% comment %}
 <div class="container">
     <h1 class="mt-5 mb-4">{{ header }}</h1>
     <form method="post"
@@ -20,6 +21,10 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary mb-3">{{ button_create }}</button>
     </form>
+</div>
+{% endcomment %}
+<a class="btn btn-primary mb-3" href="{% url form_action %}">{{ button_create }}</a>
+<div class="container">
     <div class="card urls-card">
         <div class="card-body p-0">
             <div class="table-responsive">
