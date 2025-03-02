@@ -20,25 +20,30 @@ class LabelPageView(LabelFormMixin, ListView):
 
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
-    # Never rendered. Only because required by CreateView
     template_name = 'labels/create_labels.html'
     success_url = reverse_lazy('labels')
+    messages_show = {
+        'error': 'Ошибка при создании метки',
+        'success': 'Метка успешно создана',
+    }
 
     def form_valid(self, form):
-        messages.success(self.request, 'Метка успешно создана', extra_tags='.alert')
-        # messages.success(self.request, f'{form.instance.label} created successfully')
+        messages.success(self.request, f'{self.messages_show['success']}: {form.instance.name}', extra_tags='.alert')
         return super().form_valid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
-                messages.error(self.request, f"Error in {field}: {error}")
+                messages.error(self.request, f'{self.messages_show['error']}: {field}: {error}')
         return redirect('labels')
 
 
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'labels/update_labels.html'
     success_url = reverse_lazy('labels')
+    messages_show = {
+        'success': 'Метка успешно изменена',
+    }
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -46,13 +51,12 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, 'Метка успешно изменена', extra_tags='.alert')
-        '''
         messages.success(
             self.request,
-            f'{self.original_label} updated to {form.instance.label} successfully'
+            f'{self.messages_show['success']}: \
+                {self.original_label} -> {form.instance.name}',
+            extra_tags='.alert'
         )
-        '''
         return super().form_valid(form)
 
 
@@ -64,6 +68,10 @@ class LabelDeletePageView(DeleteView):
         'header': 'Labels',
         'fields_names': ['ID', 'name'],
     }
+    messages_show = {
+        'error': 'Невозможно удалить метку, потому что она используется',
+        'success': 'Метка успешно удалена',
+    }
 
     def post(self, request, *args, **kwargs):
         label_to_delete = self.get_object()
@@ -71,15 +79,11 @@ class LabelDeletePageView(DeleteView):
 
         if has_related_task:
             logger.info(f"{request.user} CANNOT delete label {label_to_delete} - associated with tasks")
-            messages.error(
-                self.request,
-                'Невозможно удалить метку, потому что она используется',
-                extra_tags='.alert'
-            )
+            messages.error( self.request, self.messages_show['error'], extra_tags='.alert')
             return redirect(self.success_url)
         
         response = super().post(request, *args, **kwargs)
-        messages.success(self.request, 'Метка успешно удалена', extra_tags='.alert')
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
         return response
         
     def dispatch(self, request, *args, **kwargs):
