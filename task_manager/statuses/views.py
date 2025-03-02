@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import \
+    ListView, CreateView, UpdateView, DeleteView
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
 from task_manager.statuses.mixins import StatusFormMixin
@@ -27,13 +28,21 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
     }
 
     def form_valid(self, form):
-        messages.success(self.request, f'{self.messages_show['success']}: {form.instance.name}', extra_tags='.alert')
+        messages.success(
+            self.request,
+            f'{self.messages_show['success']}: {form.instance.name}',
+            extra_tags='.alert',
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
-                messages.error(self.request, f'{self.messages_show['error']}: {field}: {error}')
+                messages.error(
+                    self.request,
+                    f'{self.messages_show['error']}: {field}: {error}',
+                    extra_tags='.alert',
+                )
         return redirect('statuses')
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
@@ -49,7 +58,11 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
+        messages.success(
+            self.request,
+            self.messages_show['success'],
+            extra_tags='.alert',
+        )
 
         return super().form_valid(form)
 
@@ -69,18 +82,29 @@ class StatusDeletePageView(DeleteView):
 
     def post(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
-        has_related_task = Task.objects.filter(status=status_to_delete).exists()
+        has_related_task = \
+            Task.objects.filter(status=status_to_delete).exists()
         
 
         if has_related_task:
-            logger.info(f"{request.user} CANNOT delete status {status_to_delete} - associated with tasks")
-            messages.error(self.request, self.messages_show['error'], extra_tags='.alert')
+            logger.info(f"{request.user} CANNOT delete status \
+                        {status_to_delete} - associated with tasks")
+            messages.error(
+                self.request,
+                self.messages_show['error'],
+                extra_tags='.alert',
+            )
             return redirect(self.success_url)
         
         response = super().post(request, *args, **kwargs)
-        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
+        messages.success(
+            self.request,
+            self.messages_show['success'],
+            extra_tags='.alert',
+        )
         return response
         
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f"{request.user} now in statuses/ StatusDeletePageView dispatch method")
+        logger.info(f"{request.user} now in \
+                    StatusDeletePageView dispatch method")
         return super().dispatch(request, *args, **kwargs)
