@@ -10,7 +10,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class StatusPageView(StatusFormMixin, ListView):
-    # template_name = 'statuses/index_statuses.html'
     template_name = 'statuses/test.html'
     context_object_name = 'table_content'
     context_extra = {
@@ -20,30 +19,29 @@ class StatusPageView(StatusFormMixin, ListView):
     }
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
-    # template_name = 'create.html'
     template_name = 'statuses/create_statuses.html'
     success_url = reverse_lazy('statuses')
+    messages_show = {
+        'error': 'Ошибка при создании статуса',
+        'success': 'Статус успешно создан',
+    }
 
     def form_valid(self, form):
-        messages.success(self.request, 'Статус успешно создан', extra_tags='.alert')
-        # messages.success(self.request, f'{form.instance.status} created successfully')
+        messages.success(self.request, f'{self.messages_show['success']}: {form.instance.status}', extra_tags='.alert')
         return super().form_valid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
-                messages.error(self.request, f"Error in {field}: {error}")
+                messages.error(self.request, f'{self.messages_show['error']}: {field}: {error}')
         return redirect('statuses')
-    '''
-    def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Статус успешно создан', extra_tags='.alert')
-        return super().dispatch(request, *args, **kwargs)
-    '''
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
-    # template_name = 'update.html'
     template_name = 'statuses/update_statuses.html'
     success_url = reverse_lazy('statuses')
+    messages_show = {
+        'success': 'Статус успешно изменен',
+    }
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -51,12 +49,7 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        # Calling super().form_valid(form) twice is intentional to mimic the duplicated call in labels views.
-        '''
-        response = super().form_valid(form)
-        messages.success(self.request, f'{self.original_status} updated to {form.instance.status} successfully')
-        '''
-        messages.success(self.request, 'Статус успешно изменен', extra_tags='.alert')
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
         return super().form_valid(form)
 
 
@@ -68,22 +61,23 @@ class StatusDeletePageView(DeleteView):
         'header': 'Statuses',
         'fields_names': ['ID', 'name'],
     }
+    messages_show = {
+        'error': 'Невозможно удалить статус, потому что он используется',
+        'success': 'Статус успешно удален',
+    }
 
     def post(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
         has_related_task = Task.objects.filter(status=status_to_delete).exists()
+        
 
         if has_related_task:
             logger.info(f"{request.user} CANNOT delete status {status_to_delete} - associated with tasks")
-            messages.error(
-                self.request,
-                'Невозможно удалить статус, потому что он используется',
-                extra_tags='.alert'
-            )
+            messages.error(self.request, self.messages_show['error'], extra_tags='.alert')
             return redirect(self.success_url)
         
         response = super().post(request, *args, **kwargs)
-        messages.success(self.request, 'Статус успешно удален', extra_tags='.alert')
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
         return response
         
     def dispatch(self, request, *args, **kwargs):
