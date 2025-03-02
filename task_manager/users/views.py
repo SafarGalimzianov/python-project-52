@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import reverse, redirect
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import \
+    ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from task_manager.users.models import User
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserLoginView(LoginView):
-    template_name = 'login.html'
+    template_name = 'users/login.html'
     form_class = AuthenticationForm
 
     def get_context_data(self, **kwargs):
