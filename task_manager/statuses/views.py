@@ -47,7 +47,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
         return redirect(self.success_url)
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
-    template_name = 'statuses/update_statuses.html'
+    template_name = 'update.html'
     success_url = reverse_lazy('statuses')
     messages_show = {
         'success': STATUS_MESSAGES['update'],

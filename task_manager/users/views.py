@@ -184,7 +184,7 @@ class UserDeletePageView(DeleteView):
             return redirect(self.success_url)
         elif has_tasks_as_creator or has_tasks_as_executor:
             logger.info(f'User {request.user} CANNOT delete user \
-                        {object_to_delete} - associated with tasks')
+                        {object_to_delete} IS associated with tasks')
             messages.error(
                 self.request,
                 USER_MESSAGES['delete_error'],
@@ -192,8 +192,9 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         else:
-            logger.info(f'{request.user} CAN delete user {object_to_delete} - \
-                        SAME user and NOT associated with tasks')
+            logger.info(f'{request.user} CAN delete user \
+                        {object_to_delete} SAME and NOT \
+                            associated with tasks')
             return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -206,5 +207,6 @@ class UserDeletePageView(DeleteView):
         return response
         
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f"{request.user} now in users/ UserDeletePageView dispatch method")
+        logger.info(f"{request.user} now in \
+                    UserDeletePageView dispatch method")
         return super().dispatch(request, *args, **kwargs)
