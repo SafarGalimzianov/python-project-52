@@ -21,8 +21,12 @@ class StatusPageView(StatusFormMixin, ListView):
     }
 
 class StatusCreatePageView(StatusFormMixin, CreateView):
-    template_name = 'statuses/create_statuses.html'
+    template_name = 'create.html'
     success_url = reverse_lazy('statuses')
+    context_extra = {
+        'header': 'Statuses',
+        'button': 'Создать',
+    }
     messages_show = {
         'error': STATUS_MESSAGES['create_error'],
         'success': STATUS_MESSAGES['create'],
