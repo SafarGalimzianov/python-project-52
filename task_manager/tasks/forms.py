@@ -5,6 +5,16 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['name', 'status', 'labels', 'creator', 'executor', 'description']
+        labels = {
+            'name': 'Имя',
+            'description': 'Описание',
+            'status': 'Статус',
+            'executor': 'Исполнитель', 
+            'labels': 'Метки',
+        }
+        widgets = {
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
+        }
 
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)

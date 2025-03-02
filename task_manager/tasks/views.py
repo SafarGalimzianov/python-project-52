@@ -67,7 +67,7 @@ class TaskShowPageView(LoginRequiredMixin, DetailView):
         return context
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
-    template_name = 'tasks/create_tasks.html'
+    template_name = 'create.html'
     success_url = reverse_lazy('tasks')
     context_extra = {
         'title': 'Tasks',
