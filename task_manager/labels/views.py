@@ -30,7 +30,7 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            f'{self.messages_show['success']}: {form.instance.name}',
+            f'{self.messages_show["success"]}: {form.instance.name}',
             extra_tags='.alert'
         )
         return super().form_valid(form)
@@ -40,7 +40,7 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
             for error in errors:
                 messages.error(
                     self.request,
-                    f'{self.messages_show['error']}: {field}: {error}',
+                    f'{self.messages_show["error"]}: {field}: {error}',
                     extra_tags='.alert',
                 )
         return redirect('labels')
@@ -85,8 +85,8 @@ class LabelDeletePageView(DeleteView):
         has_related_task = label_to_delete.tasks.exists()
 
         if has_related_task:
-            logger.info(f"{request.user} CANNOT delete label \
-                        {label_to_delete} - associated with tasks")
+            logger.info(f'{request.user} CANNOT delete label \
+                        {label_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 self.messages_show['error'],
@@ -103,6 +103,6 @@ class LabelDeletePageView(DeleteView):
         return response
         
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f"{request.user} now in \
-                    LabelDeletePageView dispatch method")
+        logger.info(f'{request.user} now in \
+                    LabelDeletePageView dispatch method')
         return super().dispatch(request, *args, **kwargs)

@@ -30,7 +30,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            f'{self.messages_show['success']}: {form.instance.name}',
+            f'{self.messages_show["success"]}: {form.instance.name}',
             extra_tags='.alert',
         )
         return super().form_valid(form)
@@ -40,7 +40,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
             for error in errors:
                 messages.error(
                     self.request,
-                    f'{self.messages_show['error']}: {field}: {error}',
+                    f'{self.messages_show["error"]}: {field}: {error}',
                     extra_tags='.alert',
                 )
         return redirect('statuses')
@@ -87,8 +87,8 @@ class StatusDeletePageView(DeleteView):
         
 
         if has_related_task:
-            logger.info(f"{request.user} CANNOT delete status \
-                        {status_to_delete} - associated with tasks")
+            logger.info(f'{request.user} CANNOT delete status \
+                        {status_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 self.messages_show['error'],
@@ -105,6 +105,6 @@ class StatusDeletePageView(DeleteView):
         return response
         
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f"{request.user} now in \
-                    StatusDeletePageView dispatch method")
+        logger.info(f'{request.user} now in \
+                    StatusDeletePageView dispatch method')
         return super().dispatch(request, *args, **kwargs)
