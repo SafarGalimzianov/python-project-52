@@ -27,4 +27,6 @@ class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # The function which is called to show executor in the form
-        self.fields['executor'].label_from_instance = str
+        self.fields['executor'].label_from_instance =(
+            lambda obj: f'{obj.first_name} {obj.last_name}'
+        )
