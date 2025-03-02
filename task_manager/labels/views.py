@@ -43,7 +43,7 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
                     f'{self.messages_show["error"]}: {field}: {error}',
                     extra_tags='.alert',
                 )
-        return redirect('labels')
+        return redirect(self.success_url)
 
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'labels/update_labels.html'
@@ -79,12 +79,12 @@ class LabelDeletePageView(DeleteView):
     }
 
     def post(self, request, *args, **kwargs):
-        label_to_delete = self.get_object()
-        has_related_task = label_to_delete.tasks.exists()
+        object_to_delete = self.get_object()
+        has_related_task = object_to_delete.tasks.exists()
 
         if has_related_task:
             logger.info(f'{request.user} CANNOT delete label \
-                        {label_to_delete} - associated with tasks')
+                        {object_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 self.messages_show['error'],

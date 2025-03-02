@@ -167,15 +167,15 @@ class UserDeletePageView(DeleteView):
     }
     
     def get(self, request, *args, **kwargs):
-        user_to_delete = self.get_object()
+        object_to_delete = self.get_object()
         has_tasks_as_creator = \
-            Task.objects.filter(creator=user_to_delete).exists()
+            Task.objects.filter(creator=object_to_delete).exists()
         has_tasks_as_executor = \
-            Task.objects.filter(executor=user_to_delete).exists()
+            Task.objects.filter(executor=object_to_delete).exists()
 
-        if request.user.id != user_to_delete.id:
+        if request.user.id != object_to_delete.id:
             logger.info(f'{request.user} CANNOT delete user \
-                        {user_to_delete} - NOT SAME user')
+                        {object_to_delete} - NOT SAME user')
             messages.error(
                 self.request,
                 USER_MESSAGES['permission_error'],
@@ -184,7 +184,7 @@ class UserDeletePageView(DeleteView):
             return redirect(self.success_url)
         elif has_tasks_as_creator or has_tasks_as_executor:
             logger.info(f'User {request.user} CANNOT delete user \
-                        {user_to_delete} - associated with tasks')
+                        {object_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 USER_MESSAGES['delete_error'],
@@ -192,7 +192,7 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         else:
-            logger.info(f'{request.user} CAN delete user {user_to_delete} - \
+            logger.info(f'{request.user} CAN delete user {object_to_delete} - \
                         SAME user and NOT associated with tasks')
             return super().get(request, *args, **kwargs)
 

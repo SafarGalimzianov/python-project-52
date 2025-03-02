@@ -137,10 +137,10 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     }
 
     def get(self, request, *args, **kwargs):
-        task = self.get_object()
-        if task.creator.id != request.user.id:
+        object_to_delete = self.get_object()
+        if object_to_delete.creator.id != request.user.id:
             logger.info(f'{request.user} CANNOT delete task \
-                        created by {task.creator}')
+                        created by {object_to_delete.creator}')
             messages.error(
                 self.request,
                 self.messages_show['error'],
@@ -150,10 +150,10 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
-        task = self.get_object()
-        if task.creator.id != request.user.id:
+        object_to_delete = self.get_object()
+        if object_to_delete.creator.id != request.user.id:
             logger.info(f"{request.user} CANNOT delete task \
-                        created by {task.creator}")
+                        created by {object_to_delete.creator}")
             messages.error(
                 self.request,
                 self.messages_show['error'],

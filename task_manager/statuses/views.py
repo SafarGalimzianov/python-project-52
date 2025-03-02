@@ -44,7 +44,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
                     f'{self.messages_show["error"]}: {field}: {error}',
                     extra_tags='.alert',
                 )
-        return redirect('statuses')
+        return redirect(self.success_url)
 
 class StatusUpdatePageView(StatusFormMixin, UpdateView):
     template_name = 'statuses/update_statuses.html'
@@ -80,13 +80,13 @@ class StatusDeletePageView(DeleteView):
     }
 
     def post(self, request, *args, **kwargs):
-        status_to_delete = self.get_object()
+        object_to_delete = self.get_object()
         has_related_task = \
-            Task.objects.filter(status=status_to_delete).exists()
+            Task.objects.filter(status=object_to_delete).exists()
         
         if has_related_task:
             logger.info(f'{request.user} CANNOT delete status \
-                        {status_to_delete} - associated with tasks')
+                        {object_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 self.messages_show['error'],
