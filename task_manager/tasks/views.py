@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import UpdateView, DeleteView, CreateView, DetailView
+from django.views.generic import \
+    UpdateView, DeleteView, CreateView, DetailView
 from django.urls import reverse_lazy
 from django_filters.views import FilterView
 from task_manager.tasks.models import Task
@@ -19,8 +20,16 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     filterset_class = TaskFilter
     context_extra = {
         'title': 'Tasks',
-        'table_headers': ['ID', 'Name', 'Status', 'Labels', 'Creator', 
-                         'Executors', 'Description', 'Actions'],
+        'table_headers': [
+            'ID',
+            'Name',
+            'Status',
+            'Labels',
+            'Creator', 
+            'Executors',
+            'Description',
+            'Actions'
+        ],
         'form_action': 'task_create',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
@@ -33,9 +42,17 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        filterset = self.filterset_class(self.request.GET, queryset=queryset, request=self.request)
+        filterset = self.filterset_class(
+            self.request.GET,
+            queryset=queryset,
+            request=self.request,
+        )
         filtered_qs = filterset.qs
-        logger.info(f"Applied filters - status: {self.request.GET.get('status')}, labels: {self.request.GET.get('labels')}, count: {filtered_qs.count()}")
+        logger.info(f'Applied filters - \
+                    status: {self.request.GET.get("status")}, \
+                    labels: {self.request.GET.get("labels")}, \
+                    count: {filtered_qs.count()}'
+        )
         return filtered_qs
 
 
@@ -54,30 +71,40 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     success_url = reverse_lazy('tasks')
     context_extra = {
         'title': 'Tasks',
-        'table_headers': ['ID', 'Status', 'Labels', 'Creator', 
-                         'Executors', 'Description', 'Actions'],
+        'table_headers': [
+            'ID',
+            'Status',
+            'Labels',
+            'Creator', 
+            'Executors',
+            'Description',
+            'Actions'
+        ],
         'form_action': 'task_create',
         'button': 'Создать',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
         'executors': User.objects.all(),
     }
+    messages_show = {
+        'error': 'Ошибка при создании задачи',
+        'success': 'Задача успешно создана',
+    }
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        logger.info(f'Creating task when logged in as {self.request.user}')
+        messages.success(self.request, self.messages_show['success'])
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
-                messages.error(self.request, f"Error in {field}: {error}")
+                messages.error(
+                    self.request,
+                    f'{self.messages_show["error"]}: {field}: {error}',
+                    extra_tags='.alert',
+                )
         return redirect('task_create')
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        '''
-        if not self.request.user.is_staff:
-            form.instance.responsible = self.request.user
-        '''
-        logger.info(f'[TASKCREATEPAGEVIEW FORM_VALID] Creating task when logged in as {self.request.user}')
-        messages.success(self.request, 'Задача успешно создана')
-        return super().form_valid(form)
 
 class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
     template_name = 'update.html'
@@ -105,7 +132,7 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     }
     messages_show = {
         'error': 'Задачу может удалить только ее автор',
-        'success': 
+        'success': 'Задача успешно удалена',
     }
 
     def get(self, request, *args, **kwargs):
