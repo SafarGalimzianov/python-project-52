@@ -41,7 +41,6 @@
       </form>
     </div>
   </div>
-{% if filter.qs %}
 <thead>
     <tr>
         {% for header in table_headers %}
@@ -49,6 +48,7 @@
         {% endfor %}
     </tr>
 </thead>
+{% if filter.qs %}
 <tbody>
     {% for task in filter.qs %}
         <tr>

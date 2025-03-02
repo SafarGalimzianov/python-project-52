@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class LabelPageView(LabelFormMixin, ListView):
     template_name = 'labels/index_labels.html'
-    context_object_name = 'table_content'
+    context_object_name = 'table_content' # ListView
     context_extra = {
         'title': 'Labels',
         'table_headers': ['ID', 'Метка', 'Действия'],

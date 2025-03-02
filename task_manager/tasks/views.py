@@ -33,9 +33,6 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
         ],
         'form_action': 'task_create',
         'button_create': 'Создать задачу',
-        'statuses': Status.objects.all(),
-        'labels': Label.objects.all(),
-        'executors': User.objects.all(),
     }
 
     def get(self, request, *args, **kwargs):
@@ -83,9 +80,6 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         ],
         'form_action': 'task_create',
         'button': 'Создать',
-        'statuses': Status.objects.all(),
-        'labels': Label.objects.all(),
-        'executors': User.objects.all(),
     }
     messages_show = {
         'error': TASK_MESSAGES['create_error'],
@@ -95,7 +89,11 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     def form_valid(self, form):
         form.instance.creator = self.request.user
         logger.info(f'Creating task when logged in as {self.request.user}')
-        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
+        messages.success(
+            self.request,
+            self.messages_show['success'],
+            extra_tags='.alert',
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -121,7 +119,11 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
+        messages.success(
+            self.request,
+            self.messages_show['success'],
+            extra_tags='.alert',
+        )
         return super().form_valid(form)
 
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
