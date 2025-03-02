@@ -11,6 +11,7 @@ from task_manager.tasks.filters import TaskFilter
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from task_manager.users.models import User
+from task_manager.common.messages import TASK_MESSAGES
 import logging
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,6 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
         )
         return filtered_qs
 
-
 class TaskShowPageView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = 'tasks/show_task.html'
@@ -87,13 +87,14 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
         'executors': User.objects.all(),
     }
     messages_show = {
-        'error': 'Ошибка при создании задачи',
-        'success': 'Задача успешно создана',
+        'error': TASK_MESSAGES['create_error'],
+        'success': TASK_MESSAGES['create'],
     }
+    
     def form_valid(self, form):
         form.instance.creator = self.request.user
         logger.info(f'Creating task when logged in as {self.request.user}')
-        messages.success(self.request, self.messages_show['success'])
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -110,7 +111,7 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('tasks')
     messages_show = {
-        'success': 'Задача успешно изменена',
+        'success': TASK_MESSAGES['update'],
     }
 
     def get_object(self, queryset=None):
@@ -119,7 +120,7 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, self.messages_show['success'])
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
         return super().form_valid(form)
 
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
@@ -131,8 +132,8 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
         'fields_names': ['ID', 'name'],
     }
     messages_show = {
-        'error': 'Задачу может удалить только ее автор',
-        'success': 'Задача успешно удалена',
+        'error': TASK_MESSAGES['delete_error'],
+        'success': TASK_MESSAGES['delete'],
     }
 
     def get(self, request, *args, **kwargs):

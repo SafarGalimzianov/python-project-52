@@ -9,10 +9,10 @@ from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
 from task_manager.users.mixins import UserFormMixin
 from task_manager.tasks.models import Task
+from task_manager.common.messages import USER_MESSAGES
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
@@ -30,39 +30,33 @@ class UserLoginView(LoginView):
         logger.info(f'User {self.request.user} created {form.fields.items()}')
         messages.success(
             self.request,
-            'Вы залогинены',
+            USER_MESSAGES['login'],
             extra_tags='.alert',
         )
         return response
 
     def form_invalid(self, form):
-        flash_messages = {
-            'username_does_not_exist': 'Такого пользователя не существует',
-            'password_invalid': 'Исправьте пароль',
-            'something_wrong': 'Ошибка: проверьте введенные данные',
-        }
         if form.errors.get('password'):
             messages.error(
                 self.request,
-                flash_messages['password_invalid'],
+                USER_MESSAGES['password_error'],
                 extra_tags='warning',
             )
         if form.errors.get('username'):
             messages.error(
                 self.request,
-                flash_messages['username_does_not_exist'],
+                USER_MESSAGES['username_error'],
                 extra_tags='warning',
             )
         if form.non_field_errors():
             messages.error(
                 self.request,
-                flash_messages['something_wrong'],
+                USER_MESSAGES['general_error'],
                 extra_tags='warning',
             )
 
         return super().form_invalid(form)
     next_page = reverse_lazy('home')
-
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
@@ -70,7 +64,7 @@ class UserLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(
             self.request,
-            'Вы разлогинены',
+            USER_MESSAGES['logout'],
             extra_tags='.alert',
         )
         return super().dispatch(request, *args, **kwargs)
@@ -78,11 +72,10 @@ class UserLogoutView(LogoutView):
     def get_context_data(self, **kwargs):
         messages.success(
             self.request,
-            'Вы разлогинены',
+            USER_MESSAGES['logout'],
             extra_tags='.alert',
         )
         return super().get_context_data(**kwargs)
-
 
 class UserPageView(ListView):
     template_name = 'users/index_users.html'
@@ -107,11 +100,10 @@ class UserCreatePageView(UserFormMixin, CreateView):
         logger.info(f'Creating user when logged in as {request.user}')
         messages.success(
             self.request,
-            'Пользователь успешно зарегистрирован',
+            USER_MESSAGES['create'],
             extra_tags='.alert',
         )
         return super().dispatch(request, *args, **kwargs)
-
 
 class UserUpdatePageView(UserFormMixin, UpdateView):
     model = User
@@ -136,7 +128,7 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
                     updated by {self.request.user}')
         messages.success(
             self.request,
-            'Пользователь успешно изменен',
+            USER_MESSAGES['update'],
             extra_tags='.alert',
         )
         return super().dispatch(request, *args, **kwargs)
@@ -156,7 +148,6 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
                 extra_tags='.alert',
             )
         return super().form_invalid(form)
-
 
 class UserDeletePageView(DeleteView):
     model = User
@@ -185,10 +176,9 @@ class UserDeletePageView(DeleteView):
         if request.user.id != user_to_delete.id:
             logger.info(f'{request.user} CANNOT delete user \
                         {user_to_delete} - NOT SAME user')
-            message = 'У вас нет прав для изменения другого пользователя.'
             messages.error(
                 self.request,
-                message,
+                USER_MESSAGES['permission_error'],
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
@@ -197,7 +187,7 @@ class UserDeletePageView(DeleteView):
                         {user_to_delete} - associated with tasks')
             messages.error(
                 self.request,
-                'Невозможно удалить пользователя, потому что он используется',
+                USER_MESSAGES['delete_error'],
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
@@ -210,7 +200,7 @@ class UserDeletePageView(DeleteView):
         response = super().post(request, *args, **kwargs)
         messages.success(
             self.request,
-            'Пользователь успешно удален',
+            USER_MESSAGES['delete'],
             extra_tags='.alert',
         )
         return response

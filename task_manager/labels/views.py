@@ -5,6 +5,7 @@ from django.views.generic import \
     ListView, CreateView, UpdateView, DeleteView
 from task_manager.labels.models import Label
 from task_manager.labels.mixins import LabelFormMixin
+from task_manager.common.messages import LABEL_MESSAGES
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,15 +17,14 @@ class LabelPageView(LabelFormMixin, ListView):
         'title': 'Labels',
         'table_headers': ['ID', 'Label', 'Actions'],
         'form_action': 'label_create',
-        }
-
+    }
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
     template_name = 'labels/create_labels.html'
     success_url = reverse_lazy('labels')
     messages_show = {
-        'error': 'Ошибка при создании метки',
-        'success': 'Метка успешно создана',
+        'error': LABEL_MESSAGES['create_error'],
+        'success': LABEL_MESSAGES['create'],
     }
 
     def form_valid(self, form):
@@ -45,12 +45,11 @@ class LabelCreatePageView(LabelFormMixin, CreateView):
                 )
         return redirect('labels')
 
-
 class LabelUpdatePageView(LabelFormMixin, UpdateView):
     template_name = 'labels/update_labels.html'
     success_url = reverse_lazy('labels')
     messages_show = {
-        'success': 'Метка успешно изменена',
+        'success': LABEL_MESSAGES['update'],
     }
 
     def get_object(self, queryset=None):
@@ -66,7 +65,6 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
         )
         return super().form_valid(form)
 
-
 class LabelDeletePageView(DeleteView):
     model = Label
     template_name = 'delete.html'
@@ -76,8 +74,8 @@ class LabelDeletePageView(DeleteView):
         'fields_names': ['ID', 'name'],
     }
     messages_show = {
-        'error': 'Невозможно удалить метку, потому что она используется',
-        'success': 'Метка успешно удалена',
+        'error': LABEL_MESSAGES['delete_error'],
+        'success': LABEL_MESSAGES['delete'],
     }
 
     def post(self, request, *args, **kwargs):
