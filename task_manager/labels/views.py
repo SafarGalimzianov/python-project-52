@@ -47,14 +47,14 @@ class LabelUpdatePageView(LabelFormMixin, UpdateView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        self.original_label = obj.name
+        self.original_object = obj.name
         return obj
 
     def form_valid(self, form):
         messages.success(
             self.request,
             f'{self.messages_show['success']}: \
-                {self.original_label} -> {form.instance.name}',
+                {self.original_object} -> {form.instance.name}',
             extra_tags='.alert'
         )
         return super().form_valid(form)

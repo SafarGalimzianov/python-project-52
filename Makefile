@@ -48,4 +48,4 @@ db:
 	@$(UM) dbshell
 
 r:
-	git add . && git commit -m '1.8.?: ...' && git push
+	git add . && git commit -m '1.9.8: keep editing flash messages' && git push
