@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from task_manager.users.models import User
 from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
@@ -27,8 +27,12 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        logger.info(f'User {form.fields.items()} created by {self.request.user}')
-        messages.success(self.request, 'Вы залогинены', extra_tags='.alert')
+        logger.info(f'User {self.request.user} created {form.fields.items()}')
+        messages.success(
+            self.request,
+            'Вы залогинены',
+            extra_tags='.alert',
+        )
         return response
 
     def form_invalid(self, form):
@@ -38,11 +42,23 @@ class UserLoginView(LoginView):
             'something_wrong': 'Something went wrong, please try again',
         }
         if form.errors.get('password'):
-            messages.error(self.request, flash_messages['password_invalid'], extra_tags='warning')
+            messages.error(
+                self.request,
+                flash_messages['password_invalid'],
+                extra_tags='warning',
+            )
         if form.errors.get('username'):
-            messages.error(self.request, flash_messages['username_does_not_exist'], extra_tags='warning')
+            messages.error(
+                self.request,
+                flash_messages['username_does_not_exist'],
+                extra_tags='warning',
+            )
         if form.non_field_errors():
-            messages.error(self.request, flash_messages['something_wrong'], extra_tags='warning')
+            messages.error(
+                self.request,
+                flash_messages['something_wrong'],
+                extra_tags='warning',
+            )
 
         return super().form_invalid(form)
     next_page = reverse_lazy('home')
@@ -52,11 +68,19 @@ class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
 
     def dispatch(self, request, *args, **kwargs):
-        messages.success(self.request, 'Вы разлогинены', extra_tags='.alert')
+        messages.success(
+            self.request,
+            'Вы разлогинены',
+            extra_tags='.alert',
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        messages.success(self.request, 'Вы разлогинены', extra_tags='.alert')
+        messages.success(
+            self.request,
+            'Вы разлогинены',
+            extra_tags='.alert',
+        )
         return super().get_context_data(**kwargs)
 
 
@@ -81,7 +105,11 @@ class UserCreatePageView(UserFormMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         logger.info(f'Creating user when logged in as {request.user}')
-        messages.success(self.request, 'Пользователь успешно зарегистрирован', extra_tags='.alert')
+        messages.success(
+            self.request,
+            'Пользователь успешно зарегистрирован',
+            extra_tags='.alert',
+        )
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -92,20 +120,41 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
     form_class = UserUpdateForm
     context_extra = {
         'header': 'Users',
-        'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
+        'fields_names': [
+            'ID',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+            'password1',
+            'password2',
+        ],
     }
 
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f'User {self.get_object()} updated by {self.request.user}')
-        messages.success(self.request, 'Пользователь успешно изменен', extra_tags='.alert')
+        logger.info(f'User {self.get_object()} \
+                    updated by {self.request.user}')
+        messages.success(
+            self.request,
+            'Пользователь успешно изменен',
+            extra_tags='.alert',
+        )
         return super().dispatch(request, *args, **kwargs)
     
     def form_invalid(self, form):
-        logger.info(f'User {self.get_object()} updated by {self.request.user}')
+        logger.info(f'User {self.request.user} updated {self.get_object()}')
         if form.errors.get('username'):
-            messages.error(self.request, 'Please use a different username', extra_tags='.alert')
+            messages.error(
+                self.request,
+                'Please use a different username',
+                extra_tags='.alert',
+            )
         if form.non_field_errors():
-            messages.error(self.request, form.non_field_errors(), extra_tags='.alert')
+            messages.error(
+                self.request,
+                form.non_field_errors(),
+                extra_tags='.alert',
+            )
         return super().form_invalid(form)
 
 
@@ -115,16 +164,27 @@ class UserDeletePageView(DeleteView):
     success_url = reverse_lazy('users')
     context_extra = {
         'header': 'Users',
-        'fields_names': ['ID', 'username', 'first_name', 'last_name', 'password', 'password1', 'password2'],
+        'fields_names': [
+            'ID',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+            'password1',
+            'password2',
+        ],
     }
     
     def get(self, request, *args, **kwargs):
         user_to_delete = self.get_object()
-        has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
-        has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
+        has_tasks_as_creator = \
+            Task.objects.filter(creator=user_to_delete).exists()
+        has_tasks_as_executor = \
+            Task.objects.filter(executor=user_to_delete).exists()
 
         if request.user.id != user_to_delete.id:
-            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - NOT SAME user")
+            logger.info(f'{request.user} CANNOT delete user \
+                        {user_to_delete} - NOT SAME user')
             message = 'У вас нет прав для изменения другого пользователя.'
             messages.error(
                 self.request,
@@ -133,7 +193,8 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         elif has_tasks_as_creator or has_tasks_as_executor:
-            logger.info(f"User {request.user} CANNOT delete user {user_to_delete} - associated with tasks")
+            logger.info(f'User {request.user} CANNOT delete user \
+                        {user_to_delete} - associated with tasks')
             messages.error(
                 self.request,
                 'Невозможно удалить пользователя, потому что он используется',
@@ -141,13 +202,17 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         else:
-            logger.info(f"{request.user} CAN delete user {user_to_delete} - SAME user and NOT associated with tasks")
-            # Show confirmation page if it's the same user and no tasks
+            logger.info(f'{request.user} CAN delete user {user_to_delete} - \
+                        SAME user and NOT associated with tasks')
             return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
-        messages.success(self.request, 'Пользователь успешно удален', extra_tags='.alert')
+        messages.success(
+            self.request,
+            'Пользователь успешно удален',
+            extra_tags='.alert',
+        )
         return response
         
     def dispatch(self, request, *args, **kwargs):
