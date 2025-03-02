@@ -27,7 +27,7 @@ class StatusCreatePageView(StatusFormMixin, CreateView):
     }
 
     def form_valid(self, form):
-        messages.success(self.request, f'{self.messages_show['success']}: {form.instance.status}', extra_tags='.alert')
+        messages.success(self.request, f'{self.messages_show['success']}: {form.instance.name}', extra_tags='.alert')
         return super().form_valid(form)
 
     def form_invalid(self, form):
