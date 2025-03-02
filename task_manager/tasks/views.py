@@ -82,6 +82,9 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
 class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('tasks')
+    messages_show = {
+        'success': 'Задача успешно изменена',
+    }
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -89,13 +92,7 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, 'Задача успешно изменена')
-        '''
-        messages.success(
-            self.request,
-            f'{self.original_description} updated to {form.instance.description} successfully'
-        )
-        '''
+        messages.success(self.request, self.messages_show['success'])
         return super().form_valid(form)
 
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
@@ -106,38 +103,45 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
         'header': 'Tasks',
         'fields_names': ['ID', 'name'],
     }
+    messages_show = {
+        'error': 'Задачу может удалить только ее автор',
+        'success': 
+    }
 
     def get(self, request, *args, **kwargs):
         task = self.get_object()
-        # Check if the current user is the creator of the task
         if task.creator.id != request.user.id:
-            logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
+            logger.info(f'{request.user} CANNOT delete task \
+                        created by {task.creator}')
             messages.error(
                 self.request,
-                'Задачу может удалить только ее автор',
+                self.messages_show['error'],
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
-        # If the user is the creator, show the deletion confirmation page
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         task = self.get_object()
-        # Check again at form submission time to prevent tampering
         if task.creator.id != request.user.id:
-            logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
+            logger.info(f"{request.user} CANNOT delete task \
+                        created by {task.creator}")
             messages.error(
                 self.request,
-                'Задачу может удалить только ее автор',
+                self.messages_show['error'],
                 extra_tags='.alert'
             )
             return redirect(self.success_url)
         
         response = super().post(request, *args, **kwargs)
-        messages.success(self.request, 'Задача успешно удалена', extra_tags='.alert')
+        messages.success(
+            self.request,
+            self.messages_show['success'],
+            extra_tags='.alert',
+        )
         return response
         
     def dispatch(self, request, *args, **kwargs):
-        logger.info(f"{request.user} now in tasks/ TaskDeletePageView dispatch method")
-        # Don't add success message here since it would show even if deletion fails
+        logger.info(f"{request.user} now in \
+                    TaskDeletePageView dispatch method")
         return super(DeleteView, self).dispatch(request, *args, **kwargs)

@@ -6,7 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from task_manager.users.models import User
 from task_manager.users.forms import UserCreateForm, UserUpdateForm
 from django.urls import reverse_lazy
-from django.contrib.auth import login
 from task_manager.users.mixins import UserFormMixin
 from task_manager.tasks.models import Task
 import logging
@@ -37,9 +36,9 @@ class UserLoginView(LoginView):
 
     def form_invalid(self, form):
         flash_messages = {
-            'username_does_not_exist': 'Please enter a valid username',
-            'password_invalid': 'Please use a correct password',
-            'something_wrong': 'Something went wrong, please try again',
+            'username_does_not_exist': 'Такого пользователя не существует',
+            'password_invalid': 'Исправьте пароль',
+            'something_wrong': 'Ошибка: проверьте введенные данные',
         }
         if form.errors.get('password'):
             messages.error(
