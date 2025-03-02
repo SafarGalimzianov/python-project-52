@@ -23,3 +23,7 @@ class TaskForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'placeholder': ''}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['executor'].label_from_instance = lambda obj: str(obj)
