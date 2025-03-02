@@ -49,12 +49,8 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(
-            self.request,
-            f'{self.messages_show['success']}: \
-                {self.original_object} -> {form.instance.name}',
-            extra_tags='.alert'
-        )
+        messages.success(self.request, self.messages_show['success'], extra_tags='.alert')
+
         return super().form_valid(form)
 
 
