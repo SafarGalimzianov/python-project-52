@@ -18,6 +18,7 @@ class StatusPageView(StatusFormMixin, ListView):
         'title': 'Statuses',
         'table_headers': ['ID', 'Status', 'Actions'],
         'form_action': 'status_create',
+        'button_create': 'Создать статус',
     }
 
 class StatusCreatePageView(StatusFormMixin, CreateView):

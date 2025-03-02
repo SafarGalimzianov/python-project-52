@@ -32,6 +32,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
             'Actions'
         ],
         'form_action': 'task_create',
+        'button_create': 'Создать задачу',
         'statuses': Status.objects.all(),
         'labels': Label.objects.all(),
         'executors': User.objects.all(),

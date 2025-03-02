@@ -11,12 +11,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 class LabelPageView(LabelFormMixin, ListView):
-    template_name = 'labels/test.html'
+    template_name = 'labels/index_labels.html'
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Labels',
         'table_headers': ['ID', 'Label', 'Actions'],
         'form_action': 'label_create',
+        'button_create': 'Создать метку',
     }
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
