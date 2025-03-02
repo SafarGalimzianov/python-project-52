@@ -15,7 +15,7 @@ class LabelPageView(LabelFormMixin, ListView):
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Labels',
-        'table_headers': ['ID', 'Label', 'Actions'],
+        'table_headers': ['ID', 'Метка', 'Действия'],
         'form_action': 'label_create',
         'button_create': 'Создать метку',
     }
