@@ -20,7 +20,7 @@ class LabelPageView(LabelFormMixin, ListView):
     }
 
 class LabelCreatePageView(LabelFormMixin, CreateView):
-    template_name = 'labels/create_labels.html'
+    template_name = 'create.html'
     success_url = reverse_lazy('labels')
     messages_show = {
         'error': LABEL_MESSAGES['create_error'],
