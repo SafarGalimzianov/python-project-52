@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
-    template_name = 'tasks/test.html'
+    template_name = 'tasks/index_tasks.html'
     filterset_class = TaskFilter
     context_extra = {
         'title': 'Tasks',

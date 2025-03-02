@@ -3,6 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block search %}{% include 'search.html' %}{% endblock %}
 {% block contents %}
+{% if filter.qs %}
 <thead>
     <tr>
         {% for header in table_headers %}
@@ -11,37 +12,26 @@
     </tr>
 </thead>
 <tbody>
-    {% for content in table_content %}
+    {% for task in filter.qs %}
         <tr>
-            <td>{{ content.id }}</td>
-            <td>{{ content.name }}</td>
-            <td>{{ content.status }}</td>
+            <td>{{ task.id }}</td>
+            <td><a href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>
+            <td>{{ task.status }}</td>
             <td>
-                {% comment %}
-                Listing all labels associated with the task with the queryset
-                Each label has 2 fields: id and label = label.id and label.label
-                {% endcomment %}
-                {% for label in content.labels.all %}
-                    {{ label }}{% if not forloop.last %}, {% endif %}
+                {% for label in task.labels.all %}
+                {{ label }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>
-            <td>{{ content.creator.username }}</td>
-            <td>{{ content.responsible.username|default:'-' }}</td>
-            <td>{{ content.description|truncatechars:50 }}</td>
+            <td>{{ task.creator.first_name }} {{ task.creator.last_name }}</td>
+            <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
+            <td>{{ task.description }}</td>
             <td>
-                {% comment %}{% if request.user == content.creator %}{% endcomment %}
-                    <a href="{% url 'task_update' content.id %}">Изменить</a>
-                    <a href="{% url 'task_delete' content.id %}">Удалить</a>
-                    {% comment %}{}
-                    <form method="post" action="{% url 'task_delete' content.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link"
-                            onclick="return confirm('Are you sure you want to delete this task?');">Удалить
-                        </button>
-                    </form>
-                    {% endcomment %}
+            <a href="{% url 'task_update' task.id %}">Изменить</a>
+            <a href="{% url 'task_delete' task.id %}">Удалить</a>
             </td>
         </tr>
     {% endfor %}
 </tbody>
+{% else %}
+{% endif %}
 {% endblock %}

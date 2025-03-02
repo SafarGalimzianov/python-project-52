@@ -3,8 +3,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import \
     ListView, CreateView, UpdateView, DeleteView
-from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
+from task_manager.statuses.models import Status
 from task_manager.statuses.mixins import StatusFormMixin
 from task_manager.common.messages import STATUS_MESSAGES
 import logging
