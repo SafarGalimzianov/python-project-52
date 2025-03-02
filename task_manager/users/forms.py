@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django import forms
 from task_manager.users.models import User
 
+
 class UserUpdateForm(UserChangeForm):
     first_name = forms.CharField(
         max_length=30,
@@ -52,6 +53,7 @@ class UserUpdateForm(UserChangeForm):
             user.save()
         return user
 
+
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=30,
@@ -79,7 +81,13 @@ class UserCreateForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'password1',
+            'password2'
+        ]
 
     def save(self, commit=True):
         user = super().save(commit=False)

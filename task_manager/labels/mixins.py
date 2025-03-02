@@ -2,6 +2,7 @@ from django.views.generic.edit import FormMixin
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
 
+
 class LabelFormMixin(FormMixin):
     model = Label
     form_class = LabelForm

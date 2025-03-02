@@ -4,7 +4,14 @@ from task_manager.tasks.models import Task
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'status', 'labels', 'creator', 'executor', 'description']
+        fields = [
+            'name', 
+            'status',
+            'labels',
+            'creator',
+            'executor',
+            'description'
+        ]
         labels = {
             'name': 'Имя',
             'description': 'Описание',
@@ -13,9 +20,10 @@ class TaskForm(forms.ModelForm):
             'labels': 'Метки',
         }
         widgets = {
-            'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
+            'description': forms.Textarea(attrs={'placeholder': ''}),
         }
 
     def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['executor'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
+        super().__init__(*args, **kwargs)
+        self.fields['executor'].label_from_instance = \
+            lambda obj: f"{obj.first_name} {obj.last_name}"

@@ -14,6 +14,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
     form_class = AuthenticationForm
@@ -57,6 +58,7 @@ class UserLoginView(LoginView):
 
         return super().form_invalid(form)
     next_page = reverse_lazy('home')
+
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
@@ -105,6 +107,7 @@ class UserCreatePageView(UserFormMixin, CreateView):
         )
         return super().dispatch(request, *args, **kwargs)
 
+
 class UserUpdatePageView(UserFormMixin, UpdateView):
     model = User
     template_name = 'update.html'
@@ -148,6 +151,7 @@ class UserUpdatePageView(UserFormMixin, UpdateView):
                 extra_tags='.alert',
             )
         return super().form_invalid(form)
+
 
 class UserDeletePageView(DeleteView):
     model = User

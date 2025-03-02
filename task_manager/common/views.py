@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import \
     ListView, CreateView, UpdateView, DeleteView
 
+
 class BaseListView(ListView):
     context_object_name = 'table_content'
     
@@ -10,6 +11,7 @@ class BaseListView(ListView):
         context = super().get_context_data(**kwargs)
         context.update(getattr(self, 'context_extra', {}))
         return context
+
 
 class BaseCreateView(CreateView):
     template_name = 'create.html'
@@ -38,6 +40,7 @@ class BaseCreateView(CreateView):
                 )
         return redirect(self.success_url)
 
+
 class BaseUpdateView(UpdateView):
     template_name = 'update.html'
     
@@ -52,6 +55,7 @@ class BaseUpdateView(UpdateView):
         )
         return super().form_valid(form)
 
+
 class BaseDeleteView(DeleteView):
     template_name = 'delete.html'
     
@@ -59,9 +63,7 @@ class BaseDeleteView(DeleteView):
         # Метод переписывается в дочерних классах
         return False
         
-    def post(self, request, *args, **kwargs):
-        object_to_delete = self.get_object()
-        
+    def post(self, request, *args, **kwargs):        
         if self.has_related_objects():
             messages.error(
                 self.request,

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from task_manager.users.models import User
 
+
 class UserModelTest(TestCase):
     def test_field(self):
         field_content = {

@@ -9,6 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class StatusPageView(StatusFormMixin, BaseListView):
     template_name = 'statuses/index_statuses.html'
     context_extra = {
@@ -17,6 +18,7 @@ class StatusPageView(StatusFormMixin, BaseListView):
         'form_action': 'status_create',
         'button_create': 'Создать статус',
     }
+
 
 class StatusCreatePageView(StatusFormMixin, BaseCreateView):
     success_url = reverse_lazy('statuses')
@@ -29,11 +31,13 @@ class StatusCreatePageView(StatusFormMixin, BaseCreateView):
         'success': STATUS_MESSAGES['create'],
     }
 
+
 class StatusUpdatePageView(StatusFormMixin, BaseUpdateView):
     success_url = reverse_lazy('statuses')
     messages_show = {
         'success': STATUS_MESSAGES['update'],
     }
+
 
 class StatusDeletePageView(BaseDeleteView):
     model = Status

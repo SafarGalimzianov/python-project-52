@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class LabelPageView(LabelFormMixin, BaseListView):
     template_name = 'labels/index_labels.html'
     context_extra = {
@@ -16,6 +17,7 @@ class LabelPageView(LabelFormMixin, BaseListView):
         'form_action': 'label_create',
         'button_create': 'Создать метку',
     }
+
 
 class LabelCreatePageView(LabelFormMixin, BaseCreateView):
     success_url = reverse_lazy('labels')
@@ -28,11 +30,13 @@ class LabelCreatePageView(LabelFormMixin, BaseCreateView):
         'success': LABEL_MESSAGES['create'],
     }
 
+
 class LabelUpdatePageView(LabelFormMixin, BaseUpdateView):
     success_url = reverse_lazy('labels')
     messages_show = {
         'success': LABEL_MESSAGES['update'],
     }
+
 
 class LabelDeletePageView(BaseDeleteView):
     model = Label

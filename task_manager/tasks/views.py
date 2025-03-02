@@ -8,13 +8,11 @@ from django_filters.views import FilterView
 from task_manager.tasks.models import Task
 from task_manager.tasks.mixins import TaskFormMixin
 from task_manager.tasks.filters import TaskFilter
-from task_manager.statuses.models import Status
-from task_manager.labels.models import Label
-from task_manager.users.models import User
 from task_manager.common.messages import TASK_MESSAGES
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
     template_name = 'tasks/index_tasks.html'
@@ -54,6 +52,7 @@ class TaskPageView(LoginRequiredMixin, FilterView, TaskFormMixin):
         )
         return filtered_qs
 
+
 class TaskShowPageView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = 'tasks/show_task.html'
@@ -63,6 +62,7 @@ class TaskShowPageView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Task Details'
         return context
+
 
 class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
     template_name = 'create.html'
@@ -106,6 +106,7 @@ class TaskCreatePageView(LoginRequiredMixin, TaskFormMixin, CreateView):
                 )
         return redirect('task_create')
 
+
 class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
     template_name = 'update.html'
     success_url = reverse_lazy('tasks')
@@ -125,6 +126,7 @@ class TaskUpdatePageView(LoginRequiredMixin, TaskFormMixin, UpdateView):
             extra_tags='.alert',
         )
         return super().form_valid(form)
+
 
 class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     model = Task

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from task_manager.statuses.models import Status
 
+
 class StatusModelTest(TestCase):
     def test_field(self):
         field_content = 'status field'

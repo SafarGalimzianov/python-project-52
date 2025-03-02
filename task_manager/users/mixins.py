@@ -1,6 +1,7 @@
 from django.views.generic.edit import FormMixin
 from task_manager.users.models import User
 
+
 class UserFormMixin(FormMixin):
     model = User
     content_extra = {}
