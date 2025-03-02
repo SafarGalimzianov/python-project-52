@@ -110,7 +110,7 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     def get(self, request, *args, **kwargs):
         task = self.get_object()
         # Check if the current user is the creator of the task
-        if task.creator != request.user:
+        if task.creator.id != request.user.id:
             logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
             messages.error(
                 self.request,
@@ -124,7 +124,7 @@ class TaskDeletePageView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         task = self.get_object()
         # Check again at form submission time to prevent tampering
-        if task.creator != request.user:
+        if task.creator.id != request.user.id:
             logger.info(f"{request.user} CANNOT delete task created by {task.creator}")
             messages.error(
                 self.request,

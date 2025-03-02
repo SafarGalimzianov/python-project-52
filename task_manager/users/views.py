@@ -123,7 +123,7 @@ class UserDeletePageView(DeleteView):
         has_tasks_as_creator = Task.objects.filter(creator=user_to_delete).exists()
         has_tasks_as_executor = Task.objects.filter(executor=user_to_delete).exists()
 
-        if request.user != user_to_delete:
+        if request.user.id != user_to_delete.id:
             logger.info(f"{request.user} CANNOT delete user {user_to_delete} - NOT SAME user")
             message = 'У вас нет прав для изменения другого пользователя.'
             messages.error(
@@ -133,7 +133,7 @@ class UserDeletePageView(DeleteView):
             )
             return redirect(self.success_url)
         elif has_tasks_as_creator or has_tasks_as_executor:
-            logger.info(f"{request.user} CANNOT delete user {user_to_delete} - associated with tasks")
+            logger.info(f"User {request.user} CANNOT delete user {user_to_delete} - associated with tasks")
             messages.error(
                 self.request,
                 'Невозможно удалить пользователя, потому что он используется',
