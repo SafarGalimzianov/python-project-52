@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin', '0005_alter_logentry_user'),
+        # ('admin', '0005_alter_logentry_user'),
         ('auth', '0012_alter_user_first_name_max_length'),
         ('tasks', '0005_alter_task_creator_alter_task_executor'),
         ('users', '0004_delete_user_user'),
