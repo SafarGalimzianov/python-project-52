@@ -53,11 +53,6 @@ class StatusUpdatePageView(StatusFormMixin, UpdateView):
         'success': STATUS_MESSAGES['update'],
     }
 
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        self.original_object = obj.name
-        return obj
-
     def form_valid(self, form):
         messages.success(
             self.request,
