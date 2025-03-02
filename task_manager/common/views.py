@@ -1,7 +1,7 @@
-# task_manager/common/views.py
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import \
+    ListView, CreateView, UpdateView, DeleteView
 
 class BaseListView(ListView):
     context_object_name = 'table_content'
@@ -17,7 +17,10 @@ class BaseCreateView(CreateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            f"{self.messages_show.get('success', 'Created successfully')}: {form.instance.name}",
+            f'{self.messages_show.get(
+                "success",
+                "BaseCreateView success"
+                )}: {form.instance.name}',
             extra_tags='.alert',
         )
         return super().form_valid(form)
@@ -27,7 +30,10 @@ class BaseCreateView(CreateView):
             for error in errors:
                 messages.error(
                     self.request,
-                    f"{self.messages_show.get('error', 'Error creating')}: {field}: {error}",
+                    f'{self.messages_show.get(
+                        "error",
+                        "BaseCreateView error"
+                    )}: {field}: {error}',
                     extra_tags='.alert',
                 )
         return redirect(self.success_url)
@@ -38,7 +44,10 @@ class BaseUpdateView(UpdateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            self.messages_show.get('success', 'Updated successfully'),
+            self.messages_show.get(
+                'success',
+                'BaseUpdateView success'
+            ),
             extra_tags='.alert',
         )
         return super().form_valid(form)
@@ -47,7 +56,7 @@ class BaseDeleteView(DeleteView):
     template_name = 'delete.html'
     
     def has_related_objects(self):
-        """Override this method in child classes to check for related objects"""
+        # Метод переписывается в дочерних классах
         return False
         
     def post(self, request, *args, **kwargs):
@@ -56,7 +65,10 @@ class BaseDeleteView(DeleteView):
         if self.has_related_objects():
             messages.error(
                 self.request,
-                self.messages_show.get('error', 'Cannot delete - has related objects'),
+                self.messages_show.get(
+                    'error',
+                    'BaseDeleteView error'
+                ),
                 extra_tags='.alert',
             )
             return redirect(self.success_url)
@@ -64,7 +76,10 @@ class BaseDeleteView(DeleteView):
         response = super().post(request, *args, **kwargs)
         messages.success(
             self.request,
-            self.messages_show.get('success', 'Deleted successfully'),
+            self.messages_show.get(
+                'success',
+                'BaseDeleteView success'
+            ),
             extra_tags='.alert',
         )
         return response
