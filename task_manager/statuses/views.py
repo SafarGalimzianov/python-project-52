@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class StatusPageView(StatusFormMixin, ListView):
-    template_name = 'statuses/test.html'
+    template_name = 'statuses/index_statuses.html'
     context_object_name = 'table_content'
     context_extra = {
         'title': 'Statuses',
