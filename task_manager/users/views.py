@@ -79,15 +79,19 @@ class UserLogoutView(LogoutView):
         )
         return super().get_context_data(**kwargs)
 
+
 class UserPageView(ListView):
     template_name = 'users/index_users.html'
     context_object_name = 'table_content'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['table_headers'] = ['ID', 'Username']
         return context
+
     def get_queryset(self):
         return User.objects.all()
+
 
 class UserCreatePageView(UserFormMixin, CreateView):
     template_name = 'create.html'
