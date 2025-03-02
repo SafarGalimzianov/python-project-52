@@ -42,8 +42,9 @@ class LabelViewsTest(TestCase):
             follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Label.objects.filter\
-                        (name='New Label').exists())
+        self.assertTrue(
+            Label.objects.filter(name='New Label').exists()
+        )
         
     def test_label_update(self):
         response = self.client.post(
@@ -61,8 +62,9 @@ class LabelViewsTest(TestCase):
             follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(Label.objects.filter\
-                         (id=self.label.id).exists())
+        self.assertFalse(
+            Label.objects.filter(id=self.label.id).exists()
+        )
 
 
 class LabelDeleteWithRelationsTest(TestCase):
