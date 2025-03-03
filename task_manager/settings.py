@@ -33,13 +33,13 @@ LOGGING = {
     # Here the handler named 'file' write DEBUG logs to the file
     "handlers": {
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": str(BASE_DIR / "debug.log"),
             "formatter": "verbose",
             "delay": True, # The file is not opened or created before receiving logs
         },
-        "console": {  # Add this handler
+        "console": {
             "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
