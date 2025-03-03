@@ -17,7 +17,7 @@ class BaseCreateView(CreateView):
     template_name = 'create.html'
     
     def form_valid(self, form):
-        message_ = self.messages_show.get('success','')
+        message_ = self.messages_show.get('success', '')
         messages.success(
             self.request,
             f'{message_}: {form.instance.name}',
@@ -26,7 +26,7 @@ class BaseCreateView(CreateView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        message_ = self.messages_show.get('error','')
+        message_ = self.messages_show.get('error', '')
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(
