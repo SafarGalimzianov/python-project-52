@@ -142,10 +142,18 @@ class UserDeleteWithTasksTest(TestCase):
             creator=self.user,
             executor=self.user
         )
-        
-        self.client.post(
+
+        response = self.client.get(
             reverse('users_delete', kwargs={'pk': self.user.id}),
             follow=True
         )
 
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse('users'))
+        self.assertTrue(User.objects.filter(username='testuser').exists())
+
+        self.client.post(
+            reverse('users_delete', kwargs={'pk': self.user.id}),
+            follow=True
+        )
         self.assertTrue(User.objects.filter(username='testuser').exists())
