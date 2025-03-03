@@ -4,6 +4,9 @@
 ### Test Coverage and Mainatinability
 [![Test Coverage](https://api.codeclimate.com/v1/badges/1974c5bee55064ade7ef/test_coverage)](https://codeclimate.com/github/SafarGalimzianov/python-project-52/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/1974c5bee55064ade7ef/maintainability)](https://codeclimate.com/github/SafarGalimzianov/python-project-52/maintainability)
+
+Production:
+https://python-project-52-h39m.onrender.com
 ___
 
 ### Problem
@@ -59,3 +62,29 @@ The errors related with users actions are forgived and simply shown to the user,
 #### Performance and stability
 There are no special methods to boost performance and stability is ensured by the simplicity of the project.
 ___
+
+### Release
+What changed
+
+#### Structure
+4 applications instead of 1.
+Reason: too many views, so they had to be separated.
+Optimisations: common/ with flash messages and base views for all apps.
+
+#### Data
+5 tables (2 for User, because it is a proxy for Django User class),
+instead of 2.
+Reason: easier to handle relations.
+Optimisations: each table has indexed ID field
+
+#### Security
+No changes.
+
+#### Errors
+No changes.
+
+#### Performance and stability
+No changes.
+
+---
+17.01.25 - 03.03.25
