@@ -65,9 +65,6 @@ jobs:
             path: task_manager/debug.log
             retention-days: 1
 
-        - name: Show logs
-          run: cat task_manager/debug.log
-
         - name: CodeClimate maintainability check
           env:
             CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
@@ -78,3 +75,6 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: debug-log
+
+        - name: Show logs
+          run: cat task_manager/debug.log
