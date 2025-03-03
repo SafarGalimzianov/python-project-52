@@ -34,13 +34,6 @@ jobs:
 
         - name: Install dependencies
           run: uv pip install --system .
-        
-        - name: Upload debug.log
-          uses: actions/upload-artifact@v4
-          with:
-            name: debug-log
-            path: hexlet-code/debug.log
-            retention-days: 1
 
         - name: Run tests
           env:
@@ -49,6 +42,7 @@ jobs:
           run: |
             uv run pip install pytest-cov
             uv run pytest --cov=task_manager --cov-report=xml
+
         - name: Upload coverage to CodeClimate 
           env:
             CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
@@ -63,6 +57,13 @@ jobs:
         - name: Run linter
           run: |
             make l
+
+        - name: Upload debug.log
+          uses: actions/upload-artifact@v4
+          with:
+            name: debug-log
+            path: task_manager/debug.log
+            retention-days: 1
 
         - name: Show logs
           run: cat task_manager/debug.log
