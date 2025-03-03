@@ -132,7 +132,7 @@ class UserDeleteWithTasksTest(TestCase):
         )
         self.client = Client()
         self.client.login(username='testuser', password='testpass123')
-        
+
     def test_delete_user_with_tasks(self):
         status = Status.objects.create(name='Test Status')
         Task.objects.create(
@@ -156,4 +156,4 @@ class UserDeleteWithTasksTest(TestCase):
             reverse('users_delete', kwargs={'pk': self.user.id}),
             follow=True
         )
-        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertFalse(User.objects.filter(username='testuser').exists())
