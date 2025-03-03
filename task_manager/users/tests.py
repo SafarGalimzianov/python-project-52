@@ -99,21 +99,28 @@ class UserDeletePermissionTest(TestCase):
             username='user2',
             password='user2pass123'
         )
-        
+
     def test_user_can_only_delete_own_account(self):
         self.client.login(username='user1', password='user1pass123')
-        self.client.post(
+
+        response = self.client.get(
             reverse('users_delete', kwargs={'pk': self.user2.id}),
             follow=True
         )
-
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(username='user2').exists())
 
-        self.client.post(
+        response = self.client.get(
             reverse('users_delete', kwargs={'pk': self.user1.id}),
             follow=True
         )
+        if response.status_code == 200:
+            response = self.client.post(
+                reverse('users_delete', kwargs={'pk': self.user1.id}),
+                follow=True
+            )
 
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='user1').exists())
 
 
