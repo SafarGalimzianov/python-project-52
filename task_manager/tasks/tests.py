@@ -95,8 +95,9 @@ class TaskViewsTest(TestCase):
         self.assertIsNotNone(created_task)
         self.assertEqual(created_task.description, 'New Description')
         self.assertEqual(created_task.status, self.status)
+        # Because of __str__ method in User model
         self.assertEqual(str(created_task.creator), self.user.username)
-        self.assertEqual(str(created_task.executor), self.user)
+        self.assertEqual(str(created_task.executor), self.user.username)
         self.assertEqual(list(created_task.labels.all()), [self.label])
 
     def test_task_detail(self):
@@ -241,19 +242,22 @@ class TaskFilterTest(TestCase):
         self.client.login(username='user1', password='user1pass123')
 
     def test_filter_by_status(self):
-        response = self.client.get(f"{reverse('tasks')}?status={self.status1.id}")
+        response = \
+            self.client.get(f"{reverse('tasks')}?status={self.status1.id}")
         self.assertContains(response, 'Task 1')
         self.assertContains(response, 'Task 3')
         self.assertNotContains(response, 'Task 2')
 
     def test_filter_by_executor(self):
-        response = self.client.get(f"{reverse('tasks')}?executor={self.user2.id}")
+        response = \
+            self.client.get(f"{reverse('tasks')}?executor={self.user2.id}")
         self.assertContains(response, 'Task 2')
         self.assertContains(response, 'Task 3')
         self.assertNotContains(response, 'Task 1')
 
     def test_filter_by_label(self):
-        response = self.client.get(f"{reverse('tasks')}?labels={self.label1.id}")
+        response = \
+            self.client.get(f"{reverse('tasks')}?labels={self.label1.id}")
         self.assertContains(response, 'Task 1')
         self.assertContains(response, 'Task 3')
         self.assertNotContains(response, 'Task 2')
