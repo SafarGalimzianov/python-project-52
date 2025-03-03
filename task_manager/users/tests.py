@@ -102,14 +102,14 @@ class UserDeletePermissionTest(TestCase):
         
     def test_user_can_only_delete_own_account(self):
         self.client.login(username='user1', password='user1pass123')
-        response = self.client.post(
+        self.client.post(
             reverse('users_delete', kwargs={'pk': self.user2.id}),
             follow=True
         )
 
         self.assertTrue(User.objects.filter(username='user2').exists())
 
-        response = self.client.post(
+        self.client.post(
             reverse('users_delete', kwargs={'pk': self.user1.id}),
             follow=True
         )
@@ -128,7 +128,7 @@ class UserDeleteWithTasksTest(TestCase):
         
     def test_delete_user_with_tasks(self):
         status = Status.objects.create(name='Test Status')
-        task = Task.objects.create(
+        Task.objects.create(
             name='Test Task',
             description='Test Description',
             status=status,
@@ -136,7 +136,7 @@ class UserDeleteWithTasksTest(TestCase):
             executor=self.user
         )
         
-        response = self.client.post(
+        self.client.post(
             reverse('users_delete', kwargs={'pk': self.user.id}),
             follow=True
         )

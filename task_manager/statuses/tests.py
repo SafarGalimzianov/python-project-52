@@ -39,7 +39,11 @@ class StatusViewsTest(TestCase):
         
     def test_status_create(self):
         status_data = {'name': 'New Test Status'}
-        response = self.client.post(reverse('status_create'), status_data, follow=True)
+        response = self.client.post(
+            reverse('status_create'),
+            status_data,
+            follow=True,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Status.objects.filter(name='New Test Status').exists())
         
@@ -55,13 +59,13 @@ class StatusViewsTest(TestCase):
         self.assertEqual(status.name, 'Updated Status')
         
     def test_status_delete(self):
-        status = Status.objects.create(name='Status To Delete')
+        status = Status.objects.create(name='StatusToDelete')
         response = self.client.post(
             reverse('status_delete', kwargs={'pk': status.id}),
             follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(Status.objects.filter(name='Status To Delete').exists())
+        self.assertFalse(Status.objects.filter(name='StatusToDelete').exists())
 
 
 class StatusDeleteWithRelationsTest(TestCase):
@@ -72,21 +76,21 @@ class StatusDeleteWithRelationsTest(TestCase):
         )
         self.client = Client()
         self.client.login(username='testuser', password='testpass123')
-        
+
     def test_delete_status_with_tasks(self):
-        status = Status.objects.create(name='Status With Tasks')
-        
-        task = Task.objects.create(
+        status = Status.objects.create(name='StatusWithTasks')
+
+        Task.objects.create(
             name='Test Task',
             description='Test Description',
             status=status,
             creator=self.user
         )
-        
+
         response = self.client.post(
             reverse('status_delete', kwargs={'pk': status.id}),
             follow=True
         )
-        
+
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Status.objects.filter(name='Status With Tasks').exists())
+        self.assertTrue(Status.objects.filter(name='StatusWithTasks').exists())

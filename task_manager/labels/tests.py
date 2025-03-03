@@ -40,7 +40,11 @@ class LabelViewsTest(TestCase):
         
     def test_label_create(self):
         label_data = {'name': 'New Test Label'}
-        response = self.client.post(reverse('label_create'), label_data, follow=True)
+        response = self.client.post(
+            reverse('label_create'),
+            label_data,
+            follow=True,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Label.objects.filter(name='New Test Label').exists())
         

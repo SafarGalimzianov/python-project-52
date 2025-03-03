@@ -57,13 +57,13 @@ class TaskViewsTest(TestCase):
         self.label = Label.objects.create(name='Test Label')
 
     def test_task_list(self):
-        task1 = Task.objects.create(
+        Task.objects.create(
             name='Test Task 1',
             description='Description 1',
             status=self.status,
             creator=self.user
         )
-        task2 = Task.objects.create(
+        Task.objects.create(
             name='Test Task 2',
             description='Description 2',
             status=self.status,
@@ -177,7 +177,7 @@ class TaskDeletePermissionTest(TestCase):
         )
 
         self.client.login(username='user2', password='user2pass123')
-        response = self.client.post(
+        self.client.post(
             reverse('task_delete', kwargs={'pk': task.id}),
             follow=True
         )
@@ -185,7 +185,7 @@ class TaskDeletePermissionTest(TestCase):
         self.assertTrue(Task.objects.filter(name='User1 Task').exists())
 
         self.client.login(username='user1', password='user1pass123')
-        response = self.client.post(
+        self.client.post(
             reverse('task_delete', kwargs={'pk': task.id}),
             follow=True
         )
