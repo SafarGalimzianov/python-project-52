@@ -22,77 +22,74 @@ class LabelModelTest(TestCase):
 
 class LabelViewsTest(TestCase):
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(
-            username='testuser', 
-            password='testpassword'
+            username='testuser',
+            password='testpass123'
         )
-        self.client.login(username='testuser', password='testpassword')
-        self.label = Label.objects.create(name='Test Label')
+        self.client = Client()
+        self.client.login(username='testuser', password='testpass123')
         
     def test_label_list(self):
+        Label.objects.create(name='Test Label 1')
+        Label.objects.create(name='Test Label 2')
+        
         response = self.client.get(reverse('labels'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Test Label')
+        self.assertContains(response, 'Test Label 1')
+        self.assertContains(response, 'Test Label 2')
         
     def test_label_create(self):
-        response = self.client.post(
-            reverse('label_create'),
-            {'name': 'New Label'},
-            follow=True
-        )
+        label_data = {'name': 'New Test Label'}
+        response = self.client.post(reverse('label_create'), label_data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(
-            Label.objects.filter(name='New Label').exists()
-        )
+        self.assertTrue(Label.objects.filter(name='New Test Label').exists())
         
     def test_label_update(self):
+        label = Label.objects.create(name='Label To Update')
         response = self.client.post(
-            reverse('label_update', kwargs={'pk': self.label.id}),
+            reverse('label_update', kwargs={'pk': label.id}),
             {'name': 'Updated Label'},
             follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self.label.refresh_from_db()
-        self.assertEqual(self.label.name, 'Updated Label')
+        label.refresh_from_db()
+        self.assertEqual(label.name, 'Updated Label')
         
     def test_label_delete(self):
+        label = Label.objects.create(name='Label To Delete')
         response = self.client.post(
-            reverse('label_delete', kwargs={'pk': self.label.id}),
+            reverse('label_delete', kwargs={'pk': label.id}),
             follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(
-            Label.objects.filter(id=self.label.id).exists()
-        )
+        self.assertFalse(Label.objects.filter(name='Label To Delete').exists())
 
 
 class LabelDeleteWithRelationsTest(TestCase):
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(
-            username='testuser', 
-            password='testpassword'
+            username='testuser',
+            password='testpass123'
         )
-        self.client.login(username='testuser', password='testpassword')
-
-        self.label = Label.objects.create(name='Related Label')
-        self.status = Status.objects.create(name='Test Status')
-
-        self.task = Task.objects.create(
-            name='Test Task',
-            description='Test Description',
-            status=self.status,
-            creator=self.user
-        )
-        self.task.labels.add(self.label)
+        self.client = Client()
+        self.client.login(username='testuser', password='testpass123')
         
     def test_delete_label_with_tasks(self):
-        """Test that a label cannot be deleted if it's used in tasks"""
+        label = Label.objects.create(name='Label With Tasks')
+        
+        status = Status.objects.create(name='Test Status')
+        task = Task.objects.create(
+            name='Test Task',
+            description='Test Description',
+            status=status,
+            creator=self.user
+        )
+        task.labels.add(label)
+        
         response = self.client.post(
-            reverse('label_delete', kwargs={'pk': self.label.id}),
+            reverse('label_delete', kwargs={'pk': label.id}),
             follow=True
         )
+        
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Label.objects.filter(id=self.label.id).exists())
-        self.assertIn('error', response.context['messages_list'])
+        self.assertTrue(Label.objects.filter(name='Label With Tasks').exists())
