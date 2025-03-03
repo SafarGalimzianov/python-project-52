@@ -17,25 +17,21 @@ class BaseCreateView(CreateView):
     template_name = 'create.html'
     
     def form_valid(self, form):
+        message_ = self.messages_show.get('success','')
         messages.success(
             self.request,
-            f'{self.messages_show.get(
-                "success",
-                "BaseCreateView success"
-                )}: {form.instance.name}',
+            f'{message_}: {form.instance.name}',
             extra_tags='.alert',
         )
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        message_ = self.messages_show.get('error','')
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(
                     self.request,
-                    f'{self.messages_show.get(
-                        "error",
-                        "BaseCreateView error"
-                    )}: {field}: {error}',
+                    f'{message_}: {field}: {error}',
                     extra_tags='.alert',
                 )
         return redirect(self.success_url)
